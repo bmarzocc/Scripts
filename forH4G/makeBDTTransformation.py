@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
   #histoMVAtrans_sig.SetMarkerStyle(20)
   histoMVAtrans_sig.SetMarkerColor(kRed)
-  histoMVAtrans_sig.SetLineColor(kRedi)
+  histoMVAtrans_sig.SetLineColor(kRed)
   histoMVAtrans_sig.SetLineWidth(2)
   histoMVAtrans_sig.GetXaxis().SetTitle(var+"_transformed")
   
