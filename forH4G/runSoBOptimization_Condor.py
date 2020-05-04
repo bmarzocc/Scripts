@@ -75,7 +75,6 @@ log                     = log/strips.$(ClusterId).log
 transfer_input_files    = run_script.sh
     
 +JobFlavour             = "workday"
-+AccountingGroup        = "group_u_CMS.CAF.ALCA"
 queue arguments from arguments.txt
 '''
   
