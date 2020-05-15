@@ -73,6 +73,8 @@ output                  = output/strips.$(ClusterId).$(ProcId).out
 error                   = error/strips.$(ClusterId).$(ProcId).err
 log                     = log/strips.$(ClusterId).log
 transfer_input_files    = run_script.sh
+on_exit_remove          = (ExitBySignal == False) && (ExitCode == 0)
+periodic_release        = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*60))
     
 +JobFlavour             = "workday"
 queue arguments from arguments.txt
@@ -90,8 +92,7 @@ INPUTDIR=$2;
 INPUTSTRING=$3;
 OUTPUTDIR=$4;
 
-cp -r $INPUTDIR/../ ./
-cd forH4G/
+cd $INPUTDIR/
 
 echo -e "evaluate"
 eval `scramv1 ru -sh`

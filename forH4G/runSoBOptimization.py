@@ -68,26 +68,27 @@ if __name__ == '__main__':
   xmax = 1.
   precision = 0.0001
 
-  hist_window_sig = TH1F("hist_window_sig","hist_window_sig",int((xmax-xmin)/precision),xmin,xmax); 
-  hist_sideband_sig = TH1F("hist_sideband_sig","hist_sideband_sig",int((xmax-xmin)/precision),xmin,xmax);  
-  hist_window_data_mix = TH1F("hist_window_data_mix","hist_window_data_mix",int((xmax-xmin)/precision),xmin,xmax); 
-  hist_sideband_data_mix = TH1F("hist_sideband_data_mix","hist_sideband_data_mix",int((xmax-xmin)/precision),xmin,xmax);  
-  hist_sideband_data_mix_noSel = TH1F("hist_sideband_data_mix_noSel","hist_sideband_data_mix_noSel",int((xmax-xmin)/precision),xmin,xmax);  
+  hist_window_sig = TH1F("hist_window_sig","hist_window_sig",int((xmax-xmin)/precision),xmin,xmax) 
+  hist_sideband_sig = TH1F("hist_sideband_sig","hist_sideband_sig",int((xmax-xmin)/precision),xmin,xmax)  
+  hist_window_data_mix = TH1F("hist_window_data_mix","hist_window_data_mix",int((xmax-xmin)/precision),xmin,xmax) 
+  hist_sideband_data_mix = TH1F("hist_sideband_data_mix","hist_sideband_data_mix",int((xmax-xmin)/precision),xmin,xmax)  
+  hist_sideband_data_mix_noSel = TH1F("hist_sideband_data_mix_noSel","hist_sideband_data_mix_noSel",int((xmax-xmin)/precision),xmin,xmax)   
+  hist_sideband_data_noSel = TH1F("hist_sideband_data_noSel","hist_sideband_data_noSel",int((xmax-xmin)/precision),xmin,xmax)
   hist_sideband_data = TH1F("hist_sideband_data","hist_sideband_data",int((xmax-xmin)/precision),xmin,xmax);
-
+  
   #selection_photonID = " 1.>0. && "
   selection_photonID = " pho1_MVA>-0.9 && pho2_MVA>-0.9 && pho3_MVA>-0.9 && pho4_MVA>-0.9 && "
 
   selection_window_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass>115)&&(tp_mass<135)) && "+selection_photonID+" 1.>0.) "
   selection_sideband_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass<115)||(tp_mass>135)) && "+selection_photonID+" 1.>0.) "
   #t_data.Draw("pho1_MVA >> hist_window_data",selection_window_data) 
-  t_data.Draw("pho1_MVA >> hist_sideband_data",selection_sideband_data)
+  t_data.Draw("pho1_MVA >> hist_sideband_data_noSel",selection_sideband_data)
   #t_data_mix.Draw("pho1_MVA >> hist_window_data_mix_noSel",selection_window_data) 
   t_data_mix.Draw("pho1_MVA >> hist_sideband_data_mix_noSel",selection_sideband_data)
  
   scale = -1.
   if hist_sideband_data_mix_noSel.Integral()>0.:
-     scale = hist_sideband_data.Integral()/hist_sideband_data_mix_noSel.Integral()
+     scale = hist_sideband_data_noSel.Integral()/hist_sideband_data_mix_noSel.Integral()
   else: 
      print "WARNING: selections too tight, no events in datamix sideband!!"  
      sys.exit() 
@@ -116,8 +117,13 @@ if __name__ == '__main__':
      
      hist_window_sig.Reset()
      hist_sideband_sig.Reset()
+     hist_sideband_data.Reset()
      hist_window_data_mix.Reset()
      hist_sideband_data_mix.Reset()
+
+     selection_window_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass>115)&&(tp_mass<135)) && "+selection_photonID+selection_vec[iSel]+") "
+     selection_sideband_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass<115)||(tp_mass>135)) && "+selection_photonID+selection_vec[iSel]+") "
+     t_data.Draw("pho1_MVA >> hist_sideband_data",selection_sideband_data)
 
      selection_window_sig = "weight*36.*(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass>115)&&(tp_mass<135)) && "+selection_photonID+selection_vec[iSel]+") "
      selection_sideband_sig = "weight*36.*(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass<115)||(tp_mass>135)) && "+selection_photonID+selection_vec[iSel]+") "
@@ -134,13 +140,14 @@ if __name__ == '__main__':
      hist_sideband_data_mix.Scale(scale)
      
      print "hist_window_sig        = ",hist_window_sig.Integral()
+     print "hist_sideband_data     = ",hist_sideband_data.Integral()
      print "hist_window_data_mix   = ",hist_window_data_mix.Integral()
      print "hist_sideband_data_mix = ",hist_sideband_data_mix.Integral()
  
      score_data_mix = -999. 
-     if((hist_sideband_data_mix.Integral()+hist_window_data_mix.Integral())>=6. and hist_window_data_mix.Integral()>0. and hist_sideband_data_mix_noSel.Integral()>0.):
+     if((hist_sideband_data_mix.Integral()+hist_window_data_mix.Integral())>=6. and hist_window_data_mix.Integral()>0. and hist_sideband_data_mix_noSel.Integral()>0.  and hist_sideband_data.Integral()>=4.):
         score_data_mix = pow(hist_window_sig.Integral(),2.)/hist_window_data_mix.Integral()
         
-     print "score_data_mix =",score_data_mix," - nEvents in datamix:",hist_sideband_data_mix.Integral()+hist_window_data_mix.Integral()
+     print "score_data_mix =",score_data_mix," - nEvents in datamix:",hist_sideband_data_mix.Integral()+hist_window_data_mix.Integral()," - nEvents in data sidebands:", hist_sideband_data.Integral()
 
      
