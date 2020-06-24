@@ -77,6 +77,7 @@ on_exit_remove          = (ExitBySignal == False) && (ExitCode == 0)
 periodic_release        = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > (60*60))
     
 +JobFlavour             = "workday"
++AccountingGroup        = "group_u_CMS.CAF.ALCA"
 queue arguments from arguments.txt
 '''
   

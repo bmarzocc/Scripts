@@ -33,7 +33,7 @@ if __name__ == '__main__':
            #print x.split()
            if "score_data_mix =" in x:       
               if x.split()[2]>0.: 
-                 scores_data_mix.append([float(x.split()[2]),lines_dump[pos-4],float(x.split()[7])])
+                 scores_data_mix.append([float(x.split()[2]),lines_dump[pos-5],float(x.split()[7]),float(x.split()[13])])
 
   print "----> ALL scores_data_mix:"           
   for iSel in range(len(scores_data_mix)) :

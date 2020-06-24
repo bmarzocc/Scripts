@@ -41,26 +41,28 @@ if __name__ == '__main__':
   #t_sig = f_sig.Get('SUSYGluGluToHToAA_AToGG_M_15_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
   #print "t_sig      =",t_sig.GetEntries()
   chain_sig = TChain()
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_60/27April2020_withreweighting_phoMVA_BDTPair/signal_m_60_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_60_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_55/27April2020_withreweighting_phoMVA_BDTPair/signal_m_55_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_55_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_50/27April2020_withreweighting_phoMVA_BDTPair/signal_m_50_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_50_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_45/27April2020_withreweighting_phoMVA_BDTPair/signal_m_45_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_45_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_40/27April2020_withreweighting_phoMVA_BDTPair/signal_m_40_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_40_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_35/27April2020_withreweighting_phoMVA_BDTPair/signal_m_35_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_35_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_30/27April2020_withreweighting_phoMVA_BDTPair/signal_m_30_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_30_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_25/27April2020_withreweighting_phoMVA_BDTPair/signal_m_25_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_25_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_20/27April2020_withreweighting_phoMVA_BDTPair/signal_m_20_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_20_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')  
-  chain_sig.AddFile('/eos/user/t/twamorka/26April2020_Ntuples_CommonBDTPairing/m_15/27April2020_withreweighting_phoMVA_BDTPair/signal_m_15_transformedMVA.root/SUSYGluGluToHToAA_AToGG_M_15_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')    
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_60.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_60_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_55.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_55_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_50.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_50_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_45.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_45_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_40.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_40_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_35.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_35_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_30.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_30_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_25.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_25_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons') 
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_20.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_20_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')  
+  chain_sig.AddFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/signal_m_15.root/h4gCandidateDumper/trees/SUSYGluGluToHToAA_AToGG_M_15_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')    
+
+  #print "Total signal events: ", chain_sig.GetEntries()
 
   #f_data = TFile('/eos/user/t/twamorka/16April2020_Ntuples_BDTPairing/m_60/21April2020_withreweighting_phoMVA_BDTPair_diffParamTrain/data_all_transformedMVA.root')
   #f_data = TFile('/eos/user/t/twamorka/1May2020_BDTPairing_withoutdeltaMVar_m60/1May2020_BDTPairing_withoutdeltaMVar_m60_phoMVA_BDTPair/data_all_transformedMVA.root')
-  f_data = TFile('/eos/user/t/twamorka/16April2020_Ntuples_BDTPairing/m_15/24April2020_withreweighting_phoMVA_BDTPair/data_all_transformedMVA.root')
-  t_data = f_data.Get('Data_13TeV_4photons') 
+  f_data = TFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/data_all.root')
+  t_data = f_data.Get('h4gCandidateDumper/trees/Data_13TeV_4photons') 
   #print "t_data     =",t_data.GetEntries()
 
   #f_data_mix = TFile('/eos/user/t/twamorka/16April2020_Ntuples_BDTPairing/m_60/21April2020_withreweighting_phoMVA_BDTPair_diffParamTrain/data_mix_transformedMVA.root') 
   #f_data_mix = TFile('/eos/user/t/twamorka/1May2020_BDTPairing_withoutdeltaMVar_m60/1May2020_BDTPairing_withoutdeltaMVar_m60_phoMVA_BDTPair/data_mix_transformedMVA.root') 
-  f_data_mix = TFile('/eos/user/t/twamorka/16April2020_Ntuples_BDTPairing/m_15/24April2020_withreweighting_phoMVA_BDTPair/data_mix_transformedMVA.root')  
+  f_data_mix = TFile('/eos/user/t/twamorka/28May_2016Ntuples_ZeroVtx/hadd/data_mix.root')  
   t_data_mix = f_data_mix.Get('Data_13TeV_4photons') 
   #print "t_data_mix =",t_data_mix.GetEntries()  
 
@@ -76,8 +78,8 @@ if __name__ == '__main__':
   hist_sideband_data_noSel = TH1F("hist_sideband_data_noSel","hist_sideband_data_noSel",int((xmax-xmin)/precision),xmin,xmax)
   hist_sideband_data = TH1F("hist_sideband_data","hist_sideband_data",int((xmax-xmin)/precision),xmin,xmax);
   
-  #selection_photonID = " 1.>0. && "
-  selection_photonID = " pho1_MVA>-0.9 && pho2_MVA>-0.9 && pho3_MVA>-0.9 && pho4_MVA>-0.9 && "
+  selection_photonID = " 1.>0. && "
+  #selection_photonID = " pho1_MVA>-0.9 && pho2_MVA>-0.9 && pho3_MVA>-0.9 && pho4_MVA>-0.9 && "
 
   selection_window_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass>115)&&(tp_mass<135)) && "+selection_photonID+" 1.>0.) "
   selection_sideband_data = "(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && (tp_mass > 110 && tp_mass < 180) && ((tp_mass<115)||(tp_mass>135)) && "+selection_photonID+" 1.>0.) "
