@@ -167,7 +167,7 @@ def drawScores(sig_training, bkg_training, sig_test, bkg_test, name):
 
 if __name__ == '__main__':
  
-  inputFile = "test_training.root"
+  inputFile = "categorization_training.root"
   print "inputFile = ", inputFile
   file = TFile(inputFile) 
 
@@ -192,12 +192,15 @@ if __name__ == '__main__':
   score_Bkg_Test = file.Get(Dir+"/MVA_"+Label+"_B") 
   drawScores(score_Sig_Training, score_Bkg_Training, score_Sig_Test, score_Bkg_Test, "BDT_Response")
  
-  vars = ['dipho1_energy','dipho2_energy','dipho1_pt','dipho2_pt','dipho1_eta','dipho2_eta','dipho1_dR','dipho2_dR','dipair_dR']
-  var_labels = ['Energy (GeV)','Energy (GeV)','Pt (GeV)','Pt (GeV)','#eta','#eta','#DetaR','#DetaR','#DetaR'] 
+  vars = ['fabs_a1_mass_dM_M_a2_mass_dM__D_tp_mass', 'cosThetaStarCS_dM','cosTheta_a1_dM','cosTheta_a2_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_energy_dM', 'a2_energy_dM', 'a1_dR_dM', 'a2_dR_dM', 'a1_a2_dR_dM', 'pho1_pt','pho2_pt','pho3_pt','pho4_pt','pho1_MVA','pho2_MVA','pho3_MVA','pho4_MVA']
+  var_labels = ['|a1_mass-a2_mass|/higgs_mass','cos#theta^{*}_{CS}','cos#theta','cos#theta','Pt (GeV)','Pt (GeV)','Energy (GeV)','Energy (GeV)','#DeltaR','#DeltaR','#DeltaR', 'Pt (GeV)','Pt (GeV)','Pt (GeV)','Pt (GeV)','#gamma MVA','#gamma MVA','#gamma MVA','#gamma MVA'] 
+
+  #vars = ['pho1_MVA','pho2_MVA','pho3_MVA','pho4_MVA']
+  #var_labels = ['#gamma MVA','#gamma MVA','#gamma MVA','#gamma MVA'] 
   
   for iVar in range(0,len(vars)):  
      h_sig = file.Get(Dir+"/"+vars[iVar]+"__Signal")
      h_bkg = file.Get(Dir+"/"+vars[iVar]+"__Background")
-     drawHistos(h_sig,h_bkg,vars[iVar],var_labels[iVar])
+     drawHistos(h_sig,h_bkg,vars[iVar],var_labels[iVar]) 
    
 
