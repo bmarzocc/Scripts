@@ -9,6 +9,7 @@ def findVal(trre,var):
    elif(var=="cosTheta_a2_dM"): val = trre.cosTheta_a2_dM 
    elif(var=="a1_mass_dM"): val = trre.a1_mass_dM
    elif(var=="a2_mass_dM"): val = trre.a2_mass_dM
+   elif(var=="a1_mass_dM_M_a2_mass_dM"): val = trre.a1_mass_dM-trre.a2_mass_dM
    elif(var=="a1_pt_dM"): val = trre.a1_pt_dM
    elif(var=="a2_pt_dM"): val = trre.a2_pt_dM
    elif(var=="a1_eta_dM"): val = trre.a1_eta_dM
@@ -50,6 +51,7 @@ if __name__ == '__main__':
  #plots.append(["a2_eta_dM","a2_eta_dM","a2 (#eta)",nbin,-2.5,2.5]) 
  #plots.append(["a1_mass_dM","a1_mass_dM","a1 (Mass) [GeV]",nbin,0,200])
  #plots.append(["a2_mass_dM","a2_mass_dM","a2 (Mass) [GeV]",nbin,0,200])
+ plots.append(["a1_mass_dM_M_a2_mass_dM","a1_mass_dM_M_a2_mass_dM","",nbin,-100, 100]) 
  #plots.append(["tp_pt","tp_pt","Higgs pT [GeV]",nbin,0,200])
  #plots.append(["tp_eta","tp_eta","Higgs #eta",nbin,-4,4])
  #plots.append(["pho1_MVA","pho1_MVA","#gamma1 MVA",nbin,-1,1])
@@ -65,10 +67,10 @@ if __name__ == '__main__':
  #plots.append(["pho3_eta","pho3_eta","#gamma3 #eta",nbin,-2.5,2.5])
  #plots.append(["pho4_eta","pho4_eta","#gamma4 #eta",nbin,-2.5,2.5])
 
- fin_datamix = ROOT.TFile.Open('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/data_mix.root')
+ fin_datamix = ROOT.TFile.Open('/eos/user/t/twamorka/h4g_fullRun2/noSystematics/2018/hadd/data_mix.root')
  tree_datamix = fin_datamix.Get('Data_13TeV_H4GTag_0')
 
- fin_data = ROOT.TFile.Open('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/data_2016.root')
+ fin_data = ROOT.TFile.Open('/eos/user/t/twamorka/h4g_fullRun2/noSystematics/2018/hadd/data_2018.root')
  tree_data = fin_data.Get('tagsDumper/trees/Data_13TeV_H4GTag_0')
 
  #Cut = '1>0' 
@@ -92,7 +94,7 @@ if __name__ == '__main__':
  for i in range(0, nentries):
     #if i%1000 == 0: print i
     tree_datamix.GetEntry(i)
-    if 1>0:  
+    #if 1>0:  
     #if tree_datamix.pho1_pt > 30 and tree_datamix.pho2_pt > 18 and tree_datamix.pho3_pt > 15 and tree_datamix.pho4_pt > 15 and  abs(tree_datamix.pho1_eta) < 2.5 and abs(tree_datamix.pho2_eta) < 2.5 and abs(tree_datamix.pho3_eta) < 2.5 and abs(tree_datamix.pho4_eta) < 2.5 and (abs(tree_datamix.pho1_eta) < 1.4442 or abs(tree_datamix.pho1_eta) > 1.566) and (abs(tree_datamix.pho2_eta) < 1.4442 or abs(tree_datamix.pho2_eta) > 1.566) and (abs(tree_datamix.pho3_eta) < 1.4442 or abs(tree_datamix.pho3_eta) > 1.566) and (abs(tree_datamix.pho4_eta) < 1.4442 or abs(tree_datamix.pho4_eta) > 1.566) and tree_datamix.pho1_electronveto==1 and tree_datamix.pho2_electronveto==1 and tree_datamix.pho3_electronveto==1 and tree_datamix.pho4_electronveto==1 and tree_datamix.tp_mass > 110 and tree_datamix.tp_mass < 180 and (tree_datamix.tp_mass <= 115 or tree_datamix.tp_mass >= 135) and tree_datamix.pho1_MVA > -0.9 and tree_datamix.pho2_MVA > -0.9 and tree_datamix.pho3_MVA > -0.9 and tree_datamix.pho4_MVA > -0.9: 
     if abs(tree_datamix.pho1_eta) < 2.5 and abs(tree_datamix.pho2_eta) < 2.5 and abs(tree_datamix.pho3_eta) < 2.5 and abs(tree_datamix.pho4_eta) < 2.5 and (abs(tree_datamix.pho1_eta) < 1.4442 or abs(tree_datamix.pho1_eta) > 1.566) and (abs(tree_datamix.pho2_eta) < 1.4442 or abs(tree_datamix.pho2_eta) > 1.566) and (abs(tree_datamix.pho3_eta) < 1.4442 or abs(tree_datamix.pho3_eta) > 1.566) and (abs(tree_datamix.pho4_eta) < 1.4442 or abs(tree_datamix.pho4_eta) > 1.566) and tree_datamix.pho1_electronveto==1 and tree_datamix.pho2_electronveto==1 and tree_datamix.pho3_electronveto==1 and tree_datamix.pho4_electronveto==1 and tree_datamix.tp_mass > 110 and tree_datamix.tp_mass < 180 and (tree_datamix.tp_mass <= 115 or tree_datamix.tp_mass >= 135):  
        iVar=0
