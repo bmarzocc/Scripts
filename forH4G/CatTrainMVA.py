@@ -7,73 +7,52 @@ parser.add_argument('-o', '--output', dest='output', required=True, type=str)
 args = parser.parse_args()
 output = args.output
 
-## Files used for VBF related training
-bkg_file = ROOT.TChain()
-bkg_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/data_mix_weight.root/Data_13TeV_H4GTag_0')
-#bkg_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/data_mix_small.root/Data_13TeV_H4GTag_0')
-#bkg_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/data_mix.root/Data_13TeV_4photons')
+bkg_file_2016 = ROOT.TChain()
+bkg_file_2017 = ROOT.TChain()
+bkg_file_2018 = ROOT.TChain()
+bkg_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_weight_v3.root/Data_13TeV_H4GTag_0')
+bkg_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_weight_v3.root/Data_13TeV_H4GTag_0')
+bkg_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_weight_v3.root/Data_13TeV_H4GTag_0')
 
-sig_file = ROOT.TChain()
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_60.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_60_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_55.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_55_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_50.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_50_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_45.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_45_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_40.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_40_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_35.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_35_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_30.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_30_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_25.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_25_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_20.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_20_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_15.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_15_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_10.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_10_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-sig_file.AddFile('/eos/user/t/twamorka/h4g_fullRun2/2016/hadd/withEnergyVar/signal_m_5.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_5_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_60.root/SUSYGluGluToHToAA_AToGG_M_60_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_55.root/SUSYGluGluToHToAA_AToGG_M_55_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_50.root/SUSYGluGluToHToAA_AToGG_M_50_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_45.root/SUSYGluGluToHToAA_AToGG_M_45_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_40.root/SUSYGluGluToHToAA_AToGG_M_40_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_35.root/SUSYGluGluToHToAA_AToGG_M_35_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_30.root/SUSYGluGluToHToAA_AToGG_M_30_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_25.root/SUSYGluGluToHToAA_AToGG_M_25_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_20.root/SUSYGluGluToHToAA_AToGG_M_20_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
-#sig_file.AddFile('/eos/user/t/twamorka/2May2020_CommonBDTPairing/signal_m_15.root/SUSYGluGluToHToAA_AToGG_M_15_TuneCUETP8M1_13TeV_pythia8_13TeV_4photons')
+#sig_list = [5,10,15,20,25,30,35,40,45,50,55,60]
+#sig_list = [15,25,35,45,60]
+sig_list = [45]
+sig_file_2016 = ROOT.TChain()
+sig_file_2017 = ROOT.TChain()
+sig_file_2018 = ROOT.TChain()
+for mass in sig_list:
+   sig_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
+   sig_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCP5_13TeV_pythia8_13TeV_H4GTag_0')
+   sig_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
+
 
 f_out = ROOT.TFile(output+'.root','RECREATE')
 
 ROOT.TMVA.Tools.Instance()
 factory = ROOT.TMVA.Factory("TMVAClassification", f_out,"AnalysisType=Classification")
 
-mvaVars = [
-#'cosThetaStarCS_dM',
-#'cosTheta_a1_dM',
-#'cosTheta_a2_dM',
-#'a1_mass_dM',
-#'a2_mass_dM',
-#'a1_pt_dM',
-#'a2_pt_dM',
-#'a1_energy_dM',
-#'a2_energy_dM',
-#'a1_eta_dM',
-#'a2_eta_dM',
-#'a1_dR_dM',
-#'a2_dR_dM',
-#'a1_a2_dR_dM',
-#'a1_mass_dM-a2_mass_dM',
-#'tp_mass',
-#'tp_pt',
-#'tp_eta',
-'pho1_MVA',
-'pho2_MVA',
-'pho3_MVA',
-'pho4_MVA',
-#'pho1_pt',
-#'pho2_pt',
-#'pho3_pt',
-#'pho4_pt',
-#'pho1_eta',
-#'pho2_eta',
-#'pho3_eta',
-#'pho4_eta'
-]
+#mvaVars = ['pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
+
+mvaVars = ['a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
+
+#mvaVars = ['a1_mass_dM-a2_mass_dM', 'cosThetaStarCS_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho4_pt', 'pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
+
+#mvaVars = ['a1_mass_dM-a2_mass_dM', 'a1_dR_dM', 'a2_dR_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
+
+#mvaVars = ['a1_mass_dM-a2_mass_dM', 'cosThetaStarCS_dM', 'cosTheta_a1_dM', 'cosTheta_a2_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_energy_dM', 'a2_energy_dM', 'a1_dR_dM', 'a2_dR_dM', 'a1_a2_dR_dM', 'pho1_pt', 'pho2_pt', 'pho3_pt', 'pho4_pt', 'pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
+
+Cut_Signal = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
+
+Cut_Background = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
+
+lumi_2016 = 35.9
+norm_2016 = float(bkg_file_2016.GetEntries(Cut_Background))
+
+lumi_2017 = 41.5
+norm_2017 = float(bkg_file_2017.GetEntries(Cut_Background))
+
+lumi_2018 = 54.38
+norm_2018 = float(bkg_file_2018.GetEntries(Cut_Background))
 
 dataloader = ROOT.TMVA.DataLoader("dataset")
 
@@ -81,16 +60,14 @@ for x in mvaVars:
     #factory.AddVariable(x,"F")
     dataloader.AddVariable(x,"F")
 
-dataloader.AddSignalTree(sig_file)
-dataloader.AddBackgroundTree(bkg_file)
+dataloader.AddSignalTree(sig_file_2016,lumi_2016)
+dataloader.AddBackgroundTree(bkg_file_2016,lumi_2016/norm_2016)
 
-#Cut_Signal = 'abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180&& pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999 && pho1_pt > -999. && pho2_pt > -999. && pho3_pt > -999. && pho4_pt > -999.'
+dataloader.AddSignalTree(sig_file_2017,lumi_2017)
+dataloader.AddBackgroundTree(bkg_file_2017,lumi_2017/norm_2017)
 
-#Cut_Background = 'abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999 && pho1_pt > -999. && pho2_pt > -999. && pho3_pt > -999. && pho4_pt > -999.'
-
-Cut_Signal = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
-
-Cut_Background = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
+dataloader.AddSignalTree(sig_file_2018,lumi_2018)
+dataloader.AddBackgroundTree(bkg_file_2018,lumi_2018/norm_2018)
 
 sigCut = ROOT.TCut(Cut_Signal)
 bkgCut = ROOT.TCut(Cut_Background)
