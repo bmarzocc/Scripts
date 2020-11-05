@@ -7,9 +7,11 @@ parser.add_argument('-o', '--output', dest='output', required=True, type=str)
 args = parser.parse_args()
 output = args.output
 
-Cut_Signal = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
+Cut_Signal = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180)'
 
-Cut_Background = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && pho1_MVA > -999. && pho2_MVA > -999. && pho3_MVA > -999. && pho4_MVA > -999)'
+Cut_Background = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180)'
+
+Cut_Data = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 110 && tp_mass <180 && !(tp_mass > 115 && tp_mass <135))'
 
 #sig_list = [5,10,15,20,25,30,35,40,45,50,55,60]
 sig_list = [60]
@@ -45,7 +47,7 @@ data_file_2016 = ROOT.TChain()
 data_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_2016.root/tagsDumper/trees/Data_13TeV_H4GTag_0')
 datamix_file_2016 = ROOT.TChain()
 datamix_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_weight_v8.root/Data_13TeV_H4GTag_0')
-data_2016 = float(data_file_2016.GetEntries(Cut_Background))
+data_2016 = float(data_file_2016.GetEntries(Cut_Data))
 datamix_2016 = float(datamix_file_2016.GetEntries(Cut_Background))
 
 lumi_2017 = 41.5
@@ -53,7 +55,7 @@ data_file_2017 = ROOT.TChain()
 data_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_2017.root/tagsDumper/trees/Data_13TeV_H4GTag_0')
 datamix_file_2017 = ROOT.TChain()
 datamix_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_weight_v8.root/Data_13TeV_H4GTag_0')
-data_2017 = float(data_file_2017.GetEntries(Cut_Background))
+data_2017 = float(data_file_2017.GetEntries(Cut_Data))
 datamix_2017 = float(datamix_file_2017.GetEntries(Cut_Background))
 
 lumi_2018 = 54.38
@@ -61,7 +63,7 @@ data_file_2018 = ROOT.TChain()
 data_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_2018.root/tagsDumper/trees/Data_13TeV_H4GTag_0')
 datamix_file_2018 = ROOT.TChain()
 datamix_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_weight_v8.root/Data_13TeV_H4GTag_0')
-data_2018 = float(data_file_2018.GetEntries(Cut_Background))
+data_2018 = float(data_file_2018.GetEntries(Cut_Data))
 datamix_2018 = float(datamix_file_2018.GetEntries(Cut_Background))
 
 f_out = ROOT.TFile(output+'.root','RECREATE')
@@ -77,11 +79,11 @@ for x in mvaVars:
    dataloader.AddVariable(x,"F")
 
 for i,mass in enumerate(sig_list):
-   print "---> Signal normalization 2016: ",i,mass,float(sig_nums_2016[i])
+   print "---> Signal normalization 2016: mass",mass,"-",float(sig_nums_2016[i])
    dataloader.AddSignalTree(sig_file_2016[i],lumi_2016/float(sig_nums_2016[i]))
-   print "---> Signal normalization 2017: ",i,mass,float(sig_nums_2017[i])
+   print "---> Signal normalization 2017: mass",mass,"-",float(sig_nums_2017[i])
    dataloader.AddSignalTree(sig_file_2017[i],lumi_2017/float(sig_nums_2017[i])) 
-   print "---> Signal normalization 2018: ",i,mass,float(sig_nums_2018[i])
+   print "---> Signal normalization 2018: mass",mass,"-",float(sig_nums_2018[i])
    dataloader.AddSignalTree(sig_file_2018[i],lumi_2018/float(sig_nums_2018[i]))
 
 print "---> Background normalization 2016: ",datamix_2016/data_2016
