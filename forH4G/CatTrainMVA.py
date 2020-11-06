@@ -80,11 +80,11 @@ for x in mvaVars:
 
 for i,mass in enumerate(sig_list):
    print "---> Signal normalization 2016: mass",mass,"-",float(sig_nums_2016[i])
-   dataloader.AddSignalTree(sig_file_2016[i],lumi_2016/float(sig_nums_2016[i]))
+   dataloader.AddSignalTree(sig_file_2016[i],data_2016/float(sig_nums_2016[i]))
    print "---> Signal normalization 2017: mass",mass,"-",float(sig_nums_2017[i])
-   dataloader.AddSignalTree(sig_file_2017[i],lumi_2017/float(sig_nums_2017[i])) 
+   dataloader.AddSignalTree(sig_file_2017[i],data_2017/float(sig_nums_2017[i])) 
    print "---> Signal normalization 2018: mass",mass,"-",float(sig_nums_2018[i])
-   dataloader.AddSignalTree(sig_file_2018[i],lumi_2018/float(sig_nums_2018[i]))
+   dataloader.AddSignalTree(sig_file_2018[i],data_2018/float(sig_nums_2018[i]))
 
 print "---> Background normalization 2016: ",datamix_2016/data_2016
 dataloader.AddBackgroundTree(data_file_2016,datamix_2016/data_2016)
