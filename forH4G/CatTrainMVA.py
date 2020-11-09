@@ -86,12 +86,12 @@ for i,mass in enumerate(sig_list):
    print "---> Signal normalization 2018: mass",mass,"-",float(sig_nums_2018[i])
    dataloader.AddSignalTree(sig_file_2018[i],data_2018/float(sig_nums_2018[i]))
 
-print "---> Background normalization 2016: ",datamix_2016/data_2016
-dataloader.AddBackgroundTree(data_file_2016,datamix_2016/data_2016)
-print "---> Background normalization 2017: ",datamix_2017/data_2017
-dataloader.AddBackgroundTree(data_file_2017,datamix_2017/data_2017)
-print "---> Background normalization 2018: ",datamix_2018/data_2018
-dataloader.AddBackgroundTree(data_file_2018,datamix_2018/data_2018)
+print "---> Background normalization 2016: ",data_2016/datamix_2016
+dataloader.AddBackgroundTree(data_file_2016,data_2016/datamix_2016)
+print "---> Background normalization 2017: ",data_2017/datamix_2017
+dataloader.AddBackgroundTree(data_file_2017,data_2017/datamix_2017)
+print "---> Background normalization 2018: ",data_2018/datamix_2018
+dataloader.AddBackgroundTree(data_file_2018,data_2018/datamix_2018)
 
 sigCut = ROOT.TCut(Cut_Signal)
 bkgCut = ROOT.TCut(Cut_Background)
