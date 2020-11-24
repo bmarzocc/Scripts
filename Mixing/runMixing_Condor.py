@@ -85,18 +85,25 @@ queue arguments from arguments.txt
 INPUTEVENT=$1;
 INPUTYEAR=$2;
 INPUTERA=$3
-python H4GTreeMixing.py  ${INPUTEVENT} ${INPUTYEAR} ${INPUTERA}
+INDIR=$4
+
+python ${INDIR}/H4GTreeMixing.py  ${INPUTEVENT} ${INPUTYEAR} ${INPUTERA}
 echo -e "DONE";
 '''
   arguments=[]
-  year = [2016]
-  eras = ['B','C','D','E','F','G','H']
+  pwd = os.getcwd()
+  #year = [2016]
+  #eras = ['B','C','D','E','F','G','H']
+  #year = [2017]
+  #eras = ['B','C','D','E','F'] 
+  year = [2018]
+  eras = ['A','B','C','D']  
   #year = [2016, 2017, 2018]
   # max = 30
   for i in range(1,int(max)+1):
       for y in year:
           for era in eras:
-              arguments.append("{} {} {}".format(i,y,era))
+              arguments.append("{} {} {} {}".format(i,y,era,pwd))
       # arguments.append("{} {}".format(input,i))
       # arguments.append("\""+"{} {} {}".format(input,i,"\'"+output)+"\"")
       # arguments.append("\""+"{} {} {} {}".format(input,"\'"+i+"\"",year+"\"",output)+"\"")

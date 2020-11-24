@@ -42,12 +42,13 @@ if __name__ == '__main__':
   itree = ROOT.TChain('tagsDumper/trees/Data_13TeV_H4GTag_0')
   # itree.AddFile(options.inputFile)
   #itree.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/'+str(year)+'/hadd/data_'+str(year)+'_skim.root')
-  itree.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/hadd/data_'+str(era)+'.root')
+  #itree.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/'+str(year)+'/Data_NoPreselectionsApplied/hadd/data_'+str(era)+'.root')
+  itree.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/'+str(year)+'/Data_NoPreselectionsApplied/hadd/data_'+str(era)+'_skim.root')
 
   print "Total number of events to be analyzed:", itree.GetEntries()
 
   # outRoot = ROOT.TFile(options.outputDir+"/data_mix_"+str(options.e)+".root", "RECREATE")
-  outRoot = ROOT.TFile("/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/data_mix_"+str(era)+"_"+str(year)+"_"+str(e)+".root", "RECREATE")
+  outRoot = ROOT.TFile("/eos/user/t/twamorka/h4g_fullRun2/withSystematics/"+str(year)+"/Data_NoPreselectionsApplied/Mixing/data_mix_"+str(era)+"_"+str(year)+"_"+str(e)+"_skim.root", "RECREATE")
 
   treeSkimmer = SkimmedTreeTools()
   otree = treeSkimmer.MakeSkimmedTree()
@@ -327,9 +328,9 @@ if __name__ == '__main__':
     treeSkimmer.tp_eta[0] = Pgggg.Eta()
     treeSkimmer.tp_mass[0] = Pgggg.M()
 
-    #if (treeSkimmer.isPresel[0] == 1):
-    otree.Fill()
-    # else: print "Failed preselection"
+    if (treeSkimmer.isPresel[0] == 1):
+       otree.Fill()
+    #else: print "Failed preselection"
   outRoot.cd()
   otree.Write()
   outRoot.Close()

@@ -263,20 +263,33 @@ class SkimmedTreeTools:
 
    ## For each photon a vector is defined this way:
    ##[p4, Full 5x5 r9, ChHadIso, HOE, SCEta, PSV, pfPhoIso, trkSumPt, full5x5 iEta, rho]
-   def getEtaBin(self,eta,eta_vals):
-       eta_bin = -1
-       for i in range(len(eta_vals)-1):
-          if eta>eta_vals[i] and eta<=eta_vals[i+1]: eta_bin = i
-       return eta_bin
- 
+   def getBin(self,val,vals):
+       bin = -1
+       for i in range(len(vals)-1):
+          if val>vals[i] and val<=vals[i+1]: bin = i
+       if bin==-1: bin = len(vals)-1 
+       return bin
+
+   def inCategories(self,eta_range,r9_range,psv_range,trkSumPt_range,pfPhoIso_range,sigmaIetaIeta_range):  
+       if (eta_range[0]>eta_range[1] and eta_range[0]<eta_range[2]) and (r9_range[0]>r9_range[1] and r9_range[0]<=r9_range[2]) and (psv_range[0]>psv_range[1] and psv_range[0]<psv_range[2]) and (trkSumPt_range[0]>trkSumPt_range[1] and trkSumPt_range[0]<trkSumPt_range[2]) and (pfPhoIso_range[0]>pfPhoIso_range[1] and pfPhoIso_range[0]<pfPhoIso_range[2]) and (sigmaIetaIeta_range[0]>sigmaIetaIeta_range[1] and sigmaIetaIeta_range[0]<sigmaIetaIeta_range[2]): return True
+       else: return False 
+           
    def rediscoveryHLTcutsV1_2016(self,Pho1_vec,Pho2_vec): 
 
-       pass_HLT = False
-       eta_vals = (0.,0.9,1.5,2,2.2,3) 
-       eta_bin1 = self.getEtaBin(abs(Pho1_vec[4]),eta_vals)+1
-       eta_bin2 = self.getEtaBin(abs(Pho2_vec[4]),eta_vals)+1
-       if abs(Pho1_vec[4])>3. or abs(Pho2_vec[4])>3.: return False
-
+       pho1_r9 = Pho1_vec[1]
+       pho2_r9 = Pho2_vec[1]
+       pho1_SCeta = abs(Pho1_vec[4])
+       pho2_SCeta = abs(Pho2_vec[4])
+       pho1_psv = Pho1_vec[5]
+       pho2_psv = Pho2_vec[5]
+       pho1_trkSumPt = Pho1_vec[7]
+       pho2_trkSumPt = Pho2_vec[7]
+       pho1_sigmaIetaIeta = Pho1_vec[8]
+       pho2_sigmaIetaIeta = Pho2_vec[8]
+       
+       eta_vals = (0.,0.9,1.5,2.,2.2,3.) 
+       eta_bin1 = self.getBin(abs(pho1_SCeta),eta_vals)+1
+       eta_bin2 = self.getBin(abs(pho2_SCeta),eta_vals)+1
        effArea = {
         1: 0.16544,
         2: 0.16544,
@@ -287,21 +300,12 @@ class SkimmedTreeTools:
        pho1_pfPhoIso = Pho1_vec[6] - Pho1_vec[9]*effArea.get(int(eta_bin1))
        pho2_pfPhoIso = Pho2_vec[6] - Pho2_vec[9]*effArea.get(int(eta_bin2))
        
-       if abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442:
-          if (Pho1_vec[1]>0.5 and Pho1_vec[8]<0.0105 and pho1_pfPhoIso<4. and Pho1_vec[7]<6. and Pho1_vec[5]<0.5) and (Pho2_vec[1]>0.5 and Pho2_vec[8]<0.0105 and pho2_pfPhoIso<4. and Pho2_vec[7]<6. and Pho2_vec[5]<0.5): pass_HLT = True  
-
-       if abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) < 1.4442:
-          if (Pho1_vec[1]>0.9 and Pho1_vec[8]<0.0275 and pho1_pfPhoIso<4. and Pho1_vec[7]<6. and Pho1_vec[5]<0.5) and (Pho2_vec[1]>0.85 and Pho2_vec[8]<0.0105 and pho2_pfPhoIso<4. and Pho2_vec[7]<6. and Pho2_vec[5]<0.5): pass_HLT = True 
-
-       if abs(Pho1_vec[4]) > 1.4442 and abs(Pho2_vec[4]) > 1.566:
-          if (Pho1_vec[1]>0.85 and Pho1_vec[8]<0.0105 and pho1_pfPhoIso<4. and Pho1_vec[7]<6. and Pho1_vec[5]<0.5) and (Pho2_vec[1]>0.9 and Pho2_vec[8]<0.0275 and pho2_pfPhoIso<4. and Pho2_vec[7]<6. and Pho2_vec[5]<0.5): pass_HLT = True 
-          
-       if abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) > 1.566:
-          if (Pho1_vec[1]>0.9 and Pho1_vec[8]<0.0275 and pho1_pfPhoIso<4. and Pho1_vec[7]<6. and Pho1_vec[5]<0.5) and (Pho2_vec[1]>0.9 and Pho2_vec[8]<0.0275 and pho2_pfPhoIso<4. and Pho2_vec[7]<6. and Pho2_vec[5]<0.5): pass_HLT = True   
-
-       return pass_HLT
-          
-   
+ 
+       if(
+          (self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.85,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.0105]) or self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.5,0.85],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.0105]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.9,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.0275]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.9,0.9],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,0.],[pho1_pfPhoIso,-9999,0.],[pho1_sigmaIetaIeta,-9999,0.0275])) and (self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.85,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.0105]) or self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.5,0.85],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.0105]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.9,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.0275]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.9,0.9],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,0.],[pho2_pfPhoIso,-9999,0.],[pho2_sigmaIetaIeta,-9999,0.0275]))   
+       ): return True
+       else: return False   
+      
    def Preselection_2016(self, Pho1_vec, Pho2_vec):
        isPreselected = False
        if (
@@ -312,62 +316,129 @@ class SkimmedTreeTools:
        and ( ((abs(Pho1_vec[4]) < 1.4442) or (abs(Pho1_vec[4]) > 1.566)) and ((abs(Pho2_vec[4]) < 1.4442 )or(abs(Pho2_vec[4]) > 1.566 ) ) )
        and (Pho1_vec[0].Pt()> 30.0 and Pho2_vec[0].Pt()> 18.0)
        and (abs(Pho1_vec[4]) < 2.5 and abs(Pho2_vec[4]) < 2.5)
-       and (abs(Pho1_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566 )
-       and (abs(Pho1_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
+       and (abs(Pho1_vec[4]) < 1.4442 or abs(Pho1_vec[4]) > 1.566 )
+       and (abs(Pho2_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
        and ( (abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442)
        or (abs(Pho1_vec[4]) < 1.4442 and Pho1_vec[1]>0.85 and abs(Pho2_vec[4]) > 1.566 and Pho2_vec[1]>0.90 )
        or (abs(Pho1_vec[4]) > 1.566 and Pho1_vec[1]>0.90 and abs(Pho2_vec[4]) < 1.4442 and Pho2_vec[1]>0.85 )
        or (abs(Pho1_vec[4]) > 1.566 and Pho1_vec[1]>0.90 and abs(Pho2_vec[4]) > 1.566 and Pho2_vec[1]>0.90 ) )
        and ((Pho1_vec[0]+Pho2_vec[0])).M() > 55
-       and (Pho1_vec[0].Pt() > 0.47*Pho1_vec[0].M() and Pho2_vec[0].Pt() > 0.28*Pho2_vec[0].M())
-       and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0)
-       and self.rediscoveryHLTcutsV1_2016(Pho1_vec, Pho2_vec)   
+       and (Pho1_vec[0].Pt() > 0.47*((Pho1_vec[0]+Pho2_vec[0])).M() and Pho2_vec[0].Pt() > 0.28*((Pho1_vec[0]+Pho2_vec[0])).M())
+       and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0) 
        ):
-        isPreselected = True
-
+        if self.rediscoveryHLTcutsV1_2016(Pho1_vec, Pho2_vec):
+           isPreselected = True
+         
        return isPreselected
 
+   def rediscoveryHLTcutsV1_2017(self,Pho1_vec,Pho2_vec): 
+
+       pho1_r9 = Pho1_vec[1]
+       pho2_r9 = Pho2_vec[1]
+       pho1_SCeta = abs(Pho1_vec[4])
+       pho2_SCeta = abs(Pho2_vec[4])
+       pho1_psv = Pho1_vec[5]
+       pho2_psv = Pho2_vec[5]
+       pho1_trkSumPt = Pho1_vec[7]
+       pho2_trkSumPt = Pho2_vec[7]
+       pho1_sigmaIetaIeta = Pho1_vec[8]
+       pho2_sigmaIetaIeta = Pho2_vec[8]
+       
+       eta_vals = (0.0,1.0,1.479,2.0,2.2,2.3,2.4,5.0) 
+       eta_bin1 = self.getBin(abs(pho1_SCeta),eta_vals)+1
+       eta_bin2 = self.getBin(abs(pho2_SCeta),eta_vals)+1
+       effArea = {
+        1: 0.124,
+        2: 0.109,
+        3: 0.063,
+        4: 0.078,
+        5: 0.100,
+        6: 0.115,
+        7: 0.137    
+       }
+       pho1_pfPhoIso = Pho1_vec[6] - Pho1_vec[9]*effArea.get(int(eta_bin1))
+       pho2_pfPhoIso = Pho2_vec[6] - Pho2_vec[9]*effArea.get(int(eta_bin2))
+       
+       if(
+          (self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.85,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.5,0.85],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.9,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.035]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.8,0.9],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.035])) and (self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.85,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.5,0.85],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.9,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.035]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.8,0.9],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.035]))  
+       ): return True
+       else: return False 
+       
+     
    def Preselection_2017(self, Pho1_vec, Pho2_vec):
        isPreselected = False
        if (
-        (Pho1_vec[1]>0.8 or Pho1_vec[2]<20 or (Pho1_vec[2]/Pho1_vec[0].Pt()) < 0.3)
-        and (Pho2_vec[1] > 0.8 or Pho2_vec[2] < 20 or (Pho2_vec[2]/Pho2_vec[0].Pt() < 0.3))
-        and (Pho1_vec[3] < 0.08 and Pho2_vec[3] < 0.08)
-        and (Pho1_vec[0].Pt()> 30.0 and Pho2_vec[0].Pt()> 18.0)
-        and (abs(Pho1_vec[4]) < 2.5 and abs(Pho2_vec[4]) < 2.5)
-        and(abs(Pho1_vec[4]) < 1.4442 or abs(Pho1_vec[4]) > 1.566)
-        and (abs(Pho2_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
-        and ((Pho1_vec[0]+Pho2_vec[0])).M() > 55
-        and  ( (abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442 and (Pho1_vec[1] > 0.85 or Pho2_vec[1] > 0.85) ) #EB-EB : at least one photon R9>0.85
-           or ( abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) > 1.566 and (Pho1_vec[1] > 0.85 or Pho2_vec[1] > 0.9) ) #EB-EE : EB R9>0.85 or EE R9>0.9
-           or ( abs(Pho1_vec[4]) > 1.566 and  abs(Pho2_vec[4]) < 1.4442 and (Pho1_vec[1] > 0.9 or Pho2_vec[1]> 0.85) ) #EE-EB: EE R9>0.9 or EB R9>0.85
-           or ( abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) > 1.566 and (Pho1_vec[1] > 0.9 or Pho2_vec[1] > 0.9) ) ) #EE-EE: at least one photon R9>0.9
-        and (Pho1_vec[0].Pt() > 0.47*Pho1_vec[0].M() and Pho2_vec[0].Pt() > 0.28*Pho2_vec[0].M())  #Scaled pTs
-        and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0)
+       (Pho1_vec[1] > 0.8 or Pho1_vec[2] < 20 or (Pho1_vec[2]/Pho1_vec[0].Pt()) < 0.3 )
+       and (Pho2_vec[1] > 0.8 or Pho2_vec[2] < 20 or (Pho2_vec[2]/Pho2_vec[0].Pt() < 0.3))
+       and (Pho1_vec[3] < 0.08 and Pho2_vec[3] < 0.08)
+       and (Pho1_vec[0].Pt()> 30.0 and Pho2_vec[0].Pt()> 18.0)  
+       and (abs(Pho1_vec[4]) < 2.5 and abs(Pho2_vec[4]) < 2.5)
+       and (abs(Pho1_vec[4]) < 1.4442 or abs(Pho1_vec[4]) > 1.566 )
+       and (abs(Pho2_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
+       and ((Pho1_vec[0]+Pho2_vec[0])).M() > 55 
+       and (((abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442) and (Pho1_vec[1]>0.85 or Pho2_vec[1]>0.85))
+       or ((abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) > 1.566) and (Pho1_vec[1]>0.85 or Pho2_vec[1]>0.90))
+       or ((abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) < 1.4442) and (Pho1_vec[1]>0.90 or Pho2_vec[1]>0.85))
+       or ((abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) > 1.566) and (Pho1_vec[1]>0.90 or Pho2_vec[1]>0.90)))
+       and (Pho1_vec[0].Pt() > 0.47*((Pho1_vec[0]+Pho2_vec[0])).M() and Pho2_vec[0].Pt() > 0.28*((Pho1_vec[0]+Pho2_vec[0])).M())
+       and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0) 
        ):
-        isPreselected = True
-
+        if self.rediscoveryHLTcutsV1_2017(Pho1_vec, Pho2_vec):
+           isPreselected = True
+        
        return isPreselected
+
+   def rediscoveryHLTcutsV1_2018(self,Pho1_vec,Pho2_vec): 
+
+       pho1_r9 = Pho1_vec[1]
+       pho2_r9 = Pho2_vec[1]
+       pho1_SCeta = abs(Pho1_vec[4])
+       pho2_SCeta = abs(Pho2_vec[4])
+       pho1_psv = Pho1_vec[5]
+       pho2_psv = Pho2_vec[5]
+       pho1_trkSumPt = Pho1_vec[7]
+       pho2_trkSumPt = Pho2_vec[7]
+       pho1_sigmaIetaIeta = Pho1_vec[8]
+       pho2_sigmaIetaIeta = Pho2_vec[8]
+      
+       eta_vals = (0.,0.9,1.5,2.,2.2,3.) 
+       eta_bin1 = self.getBin(abs(pho1_SCeta),eta_vals)+1
+       eta_bin2 = self.getBin(abs(pho2_SCeta),eta_vals)+1
+       effArea = {
+        1: 0.16544,
+        2: 0.16544,
+        3: 0.13212,
+        4: 0.13212,
+        5: 0.13212
+       }
+       pho1_pfPhoIso = Pho1_vec[6] - Pho1_vec[9]*effArea.get(int(eta_bin1))
+       pho2_pfPhoIso = Pho2_vec[6] - Pho2_vec[9]*effArea.get(int(eta_bin2))
+       
+       if(
+          (self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.85,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho1_SCeta,0.,1.4442],[pho1_r9,0.5,0.85],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.9,9999.],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.035]) or self.inCategories([pho1_SCeta,1.566,9999.],[pho1_r9,0.8,0.9],[pho1_psv,-9999,0.5],[pho1_trkSumPt,-9999,6.],[pho1_pfPhoIso,-9999,4.],[pho1_sigmaIetaIeta,-9999,0.035])) and (self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.85,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho2_SCeta,0.,1.4442],[pho2_r9,0.5,0.85],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.015]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.9,9999.],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.035]) or self.inCategories([pho2_SCeta,1.566,9999.],[pho2_r9,0.8,0.9],[pho2_psv,-9999,0.5],[pho2_trkSumPt,-9999,6.],[pho2_pfPhoIso,-9999,4.],[pho2_sigmaIetaIeta,-9999,0.035]))    
+       ): return True
+       else: return False
 
    def Preselection_2018(self, Pho1_vec, Pho2_vec):
        isPreselected = False
        if (
-        (Pho1_vec[1]>0.8 or Pho1_vec[2]<20 or (Pho1_vec[2]/Pho1_vec[0].Pt()) < 0.3)
-        and (Pho2_vec[1] > 0.8 or Pho2_vec[2] < 20 or (Pho2_vec[2]/Pho2_vec[0].Pt() < 0.3))
-        and (Pho1_vec[3] < 0.08 and Pho2_vec[3] < 0.08)
-        and (Pho1_vec[0].Pt()> 30.0 and Pho2_vec[0].Pt()> 18.0)
-        and (abs(Pho1_vec[4]) < 2.5 and abs(Pho2_vec[4]) < 2.5)
-        and(abs(Pho1_vec[4]) < 1.4442 or abs(Pho1_vec[4]) > 1.566)
-        and (abs(Pho2_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
-        and ((Pho1_vec[0]+Pho2_vec[0])).M() > 50
-        and  ( (abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442 and (Pho1_vec[1] > 0.5 or Pho2_vec[1] > 0.5) ) #EB-EB : at least one photon R9>0.85
-           or ( abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) > 1.566 and (Pho1_vec[1] > 0.5 or Pho2_vec[1] > 0.9) ) #EB-EE : EB R9>0.85 or EE R9>0.9
-           or ( abs(Pho1_vec[4]) > 1.566 and  abs(Pho2_vec[4]) < 1.4442 and (Pho1_vec[1] > 0.9 or Pho2_vec[1]> 0.5) ) #EE-EB: EE R9>0.9 or EB R9>0.85
-           or ( abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) > 1.566 and (Pho1_vec[1] > 0.9 or Pho2_vec[1] > 0.9) ) ) #EE-EE: at least one photon R9>0.9
-        and (Pho1_vec[0].Pt() > 0.47*Pho1_vec[0].M() and Pho2_vec[0].Pt() > 0.28*Pho2_vec[0].M())  #Scaled pTs
-        and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0)
+       (Pho1_vec[1] > 0.8 or Pho1_vec[2] < 20 or (Pho1_vec[2]/Pho1_vec[0].Pt()) < 0.3 )
+       and (Pho2_vec[1] > 0.8 or Pho2_vec[2] < 20 or (Pho2_vec[2]/Pho2_vec[0].Pt() < 0.3))
+       and (Pho1_vec[3] < 0.08 and Pho2_vec[3] < 0.08)
+       and (Pho1_vec[0].Pt()> 30.0 and Pho2_vec[0].Pt()> 18.0)  
+       and (abs(Pho1_vec[4]) < 2.5 and abs(Pho2_vec[4]) < 2.5)
+       and (abs(Pho1_vec[4]) < 1.4442 or abs(Pho1_vec[4]) > 1.566 )
+       and (abs(Pho2_vec[4]) < 1.4442 or abs(Pho2_vec[4]) > 1.566)
+       and ((Pho1_vec[0]+Pho2_vec[0])).M() > 55 
+       and (((abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) < 1.4442) and (Pho1_vec[1]>0.50 or Pho2_vec[1]>0.50))
+       or ((abs(Pho1_vec[4]) < 1.4442 and abs(Pho2_vec[4]) > 1.566) and (Pho1_vec[1]>0.50 or Pho2_vec[1]>0.90))
+       or ((abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) < 1.4442) and (Pho1_vec[1]>0.90 or Pho2_vec[1]>0.50))
+       or ((abs(Pho1_vec[4]) > 1.566 and abs(Pho2_vec[4]) > 1.566) and (Pho1_vec[1]>0.50 or Pho2_vec[1]>0.50)))
+       and (Pho1_vec[0].Pt() > 0.47*((Pho1_vec[0]+Pho2_vec[0])).M() and Pho2_vec[0].Pt() > 0.28*((Pho1_vec[0]+Pho2_vec[0])).M())
+       and (Pho1_vec[5] == 0) and (Pho2_vec[5]==0) 
        ):
-        isPreselected = True
+        if self.rediscoveryHLTcutsV1_2018(Pho1_vec, Pho2_vec):
+           isPreselected = True
 
        return isPreselected
 
