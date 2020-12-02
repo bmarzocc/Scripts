@@ -50,12 +50,12 @@ if __name__ == '__main__':
  nbin = 10
  plots = []
  #plots.append(["cosThetaStarCS_dM","cosThetaStarCS_dM","Cos #theta*",nbin,-1.,1.])
- plots.append(["cosTheta_a1_dM","cosTheta_a1_dM","Cos #theta_{#gamma a_{1}}",nbin,-1.,1.])
+ #plots.append(["cosTheta_a1_dM","cosTheta_a1_dM","Cos #theta_{#gamma a_{1}}",nbin,-1.,1.])
  #plots.append(["cosTheta_a2_dM","cosTheta_a2_dM","Cos #theta_{#gamma a_{2}}",nbin,-1.,1.])
- plots.append(["a1_a2_dR_dM","a1_a2_dR_dM","#Delta R (a1,a2)",nbin,0,9.])
+ plots.append(["a1_a2_dR_dM","a1_a2_dR_dM","#Delta R (a1,a2)",nbin,0,7.])
  #plots.append(["a1_dR_dM","a1_dR_dM","#Delta R (#gamma1, #gamma2)",nbin,0,9.])
  #plots.append(["a2_dR_dM","a2_dR_dM","#Delta R (#gamma3, #gamma4)",nbin,0,9.])
- plots.append(["a1_pt_dM","a1_pt_dM","a1 (pT) [GeV]",nbin,0,350])
+ plots.append(["a1_pt_dM","a1_pt_dM","a1 (pT) [GeV]",nbin,0,200])
  plots.append(["a2_pt_dM","a2_pt_dM","a2 (pT) [GeV]",nbin,0,200])
  #plots.append(["a1_eta_dM","a1_eta_dM","a1 (#eta)",nbin,-6.,6.])
  #plots.append(["a2_eta_dM","a2_eta_dM","a2 (#eta)",nbin,-6.,6.]) 
@@ -91,15 +91,18 @@ if __name__ == '__main__':
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_preselSkim.root/Data_13TeV_H4GTag_0')  
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
- tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
- #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0')    
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
+ tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0') 
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0') 
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0')    
 
  tree_data = ROOT.TChain() 
- #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_2016.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
+ tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_2016.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
  #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_2017.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
- tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_2018.root/tagsDumper/trees/Data_13TeV_H4GTag_0')  
+ #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_2018.root/tagsDumper/trees/Data_13TeV_H4GTag_0')  
 
  #Cut = '1>0' 
  Cut = ' pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && fabs(pho1_eta) < 2.5 && fabs(pho2_eta) < 2.5 && fabs(pho3_eta) < 2.5 && fabs(pho4_eta) < 2.5 && (fabs(pho1_eta) < 1.4442 || fabs(pho1_eta) > 1.566) && (fabs(pho2_eta) < 1.4442 || fabs(pho2_eta) > 1.566) && (fabs(pho3_eta) < 1.4442 || fabs(pho3_eta) > 1.566) && (fabs(pho4_eta) < 1.4442 || fabs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) '
@@ -133,6 +136,7 @@ if __name__ == '__main__':
  for i in range(0, nentries):
     #if i%1000 == 0: print i
     tree_datamix.GetEntry(i)
+    #if 1>0: 
     if tree_datamix.pho1_pt > 30 and tree_datamix.pho2_pt > 18 and tree_datamix.pho3_pt > 15 and tree_datamix.pho4_pt > 15 and  abs(tree_datamix.pho1_eta) < 2.5 and abs(tree_datamix.pho2_eta) < 2.5 and abs(tree_datamix.pho3_eta) < 2.5 and abs(tree_datamix.pho4_eta) < 2.5 and (abs(tree_datamix.pho1_eta) < 1.4442 or abs(tree_datamix.pho1_eta) > 1.566) and (abs(tree_datamix.pho2_eta) < 1.4442 or abs(tree_datamix.pho2_eta) > 1.566) and (abs(tree_datamix.pho3_eta) < 1.4442 or abs(tree_datamix.pho3_eta) > 1.566) and (abs(tree_datamix.pho4_eta) < 1.4442 or abs(tree_datamix.pho4_eta) > 1.566) and tree_datamix.pho1_electronveto==1 and tree_datamix.pho2_electronveto==1 and tree_datamix.pho3_electronveto==1 and tree_datamix.pho4_electronveto==1 and tree_datamix.tp_mass > 100 and tree_datamix.tp_mass < 180 and (tree_datamix.tp_mass <= 115 or tree_datamix.tp_mass >= 135): 
        subset = []
        for iVar,plot in enumerate(plots):       
@@ -173,7 +177,6 @@ if __name__ == '__main__':
        for iVar,plot in enumerate(plots):    
           ibin = Histos[iVar].FindBin(findVal(tree_datamix,plot[0]))         
           subset.append(ibin)
-          iVar+=1 
        weight=weight_ratio[tuple(subset)]
     mix_weight[0] = weight
     outtree.Fill() 
