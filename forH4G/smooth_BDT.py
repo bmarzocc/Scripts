@@ -7,8 +7,8 @@ from array import array
 
 def rebinHist(hist,nbins,min,max):
  name = hist.GetName()
- hist.SetName(name+'_oldBin')
- h_rebin = ROOT.TH1F(name,hist.GetTitle(),nbins,float(min),float(max)) 
+ #hist.SetName(name+'_oldBin')
+ h_rebin = ROOT.TH1F(name,name,nbins,float(min),float(max)) 
  for bin in range(0,hist.GetNbinsX()+2): 
   h_rebin.SetBinContent(h_rebin.FindBin(hist.GetBinCenter(bin)),hist.GetBinContent(bin))
  return h_rebin
@@ -50,7 +50,8 @@ def smoothing(h_bdt,method="SmoothSuper"):
  for bin in range(0,h_bdt_smooth.GetNbinsX()): 
   y = h_bdt_smooth.GetBinContent(bin+1)
   h_bdt_smooth_up.SetBinContent(bin+1,y+math.sqrt(y))
-  h_bdt_smooth_down.SetBinContent(bin+1,y-math.sqrt(y))
+  if (y-math.sqrt(y))>0.: h_bdt_smooth_down.SetBinContent(bin+1,y-math.sqrt(y))
+  else: h_bdt_smooth_down.SetBinContent(bin+1,0.001)
   h_diff.Fill(y-h_bdt.GetBinContent(bin+1)) 
 
  return [h_bdt_smooth,h_bdt_smooth_up,h_bdt_smooth_down,h_bdt_smooth_rnd,h_diff] 
@@ -63,6 +64,22 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    hist_smooth.SetLineColor(ROOT.kRed)
    hist_smooth_up.SetLineColor(ROOT.kGreen)
    hist_smooth_down.SetLineColor(ROOT.kBlue)
+   hist.GetYaxis().SetRangeUser(hist_smooth_down.GetMinimum()*0.5,hist_smooth_up.GetMaximum()*2.)
+   hist.GetXaxis().SetTitle('bdt')
+   
+   title = name
+   hist.SetTitle(title.replace('h_',''))
+
+   leg = ROOT.TLegend(0.70,0.7,0.85,0.88)
+   leg.SetFillColor(ROOT.kWhite)
+   leg.SetFillStyle(1000)
+   leg.SetLineWidth(0)
+   leg.SetLineColor(ROOT.kWhite)
+   leg.SetTextFont(42)
+   leg.SetTextSize(0.035)
+   leg.AddEntry(hist_smooth_up,"Smoothing + #sigma","L")
+   leg.AddEntry(hist_smooth,"Smoothing ","L")
+   leg.AddEntry(hist_smooth_down,"Smoothing - #sigma","L")
    
    c = ROOT.TCanvas()
    c.SetLogy()
@@ -70,6 +87,7 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    hist_smooth.Draw("HIST,same")
    hist_smooth_up.Draw("HIST,same")
    hist_smooth_down.Draw("HIST,same")
+   leg.Draw("same")
    c.SaveAs(name+".png","png") 
    c.SaveAs(name+".pdf","pdf") 
 
@@ -128,6 +146,7 @@ if __name__ == '__main__':
      drawHisto(hist_smooth[4],'h_bdt_diff_smoothing_'+algo) 
      outFile = ROOT.TFile(outFile_name,"RECREATE")
      outFile.cd()
+     hist.Write()
      hist_smooth[0].Write() 
      hist_smooth[1].Write() 
      hist_smooth[2].Write()  
