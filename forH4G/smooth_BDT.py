@@ -42,7 +42,7 @@ def smoothing(h_bdt,method="SmoothSuper"):
  h_bdt_smooth_rnd = ROOT.TH1F(h_bdt.GetName()+"_smooth_rnd",h_bdt.GetName()+"_smooth_rnd",h_bdt.GetNbinsX(),float(bin_min),float(bin_max))
  h_bdt_smooth_up = ROOT.TH1F(h_bdt.GetName()+"_smooth_up",h_bdt.GetName()+"_smooth_up",h_bdt.GetNbinsX(),float(bin_min),float(bin_max))
  h_bdt_smooth_down = ROOT.TH1F(h_bdt.GetName()+"_smooth_down",h_bdt.GetName()+"_smooth_down",h_bdt.GetNbinsX(),float(bin_min),float(bin_max))
- h_diff = ROOT.TH1F(h_bdt.GetName()+"_smoothing_Diff",h_bdt.GetName()+"_smoothing_Diff",100,-50.,50.)
+ h_diff = ROOT.TH1F(h_bdt.GetName()+"_smoothing_Diff",h_bdt.GetName()+"_smoothing_Diff",200,-20.,20.)
 
  g_bdt = ROOT.TGraph()
  g_bdt_smooth = ROOT.TGraph() 
@@ -109,6 +109,8 @@ def compareHistos(hist_data_tmp,hist_datamix_tmp,name,rebin):
    c.SaveAs(name+".png","png") 
    c.SaveAs(name+".pdf","pdf") 
 
+   ROOT.gStyle.SetOptStat(1111)
+
 def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
 
    ROOT.gStyle.SetOptStat(0000)
@@ -117,7 +119,7 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    hist_smooth.SetLineColor(ROOT.kRed)
    hist_smooth_up.SetLineColor(ROOT.kGreen)
    hist_smooth_down.SetLineColor(ROOT.kBlue)
-   hist.GetYaxis().SetRangeUser(hist_smooth_down.GetMinimum()*0.5,hist_smooth_up.GetMaximum()*2.)
+   hist.GetYaxis().SetRangeUser(0.1,hist_smooth_up.GetMaximum()*2.)
    hist.GetXaxis().SetTitle('bdt')
    
    title = name
@@ -143,6 +145,8 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    leg.Draw("same")
    c.SaveAs(name+".png","png") 
    c.SaveAs(name+".pdf","pdf") 
+
+   ROOT.gStyle.SetOptStat(1111)
 
 def drawHisto(hist,name):
 
@@ -237,8 +241,8 @@ if __name__ == '__main__':
  sig_tree_2016.AddFile(inDir+'/signal_m_'+str(mass)+'_2016.root/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
  sig_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2016 = float(histo_scale.Integral())
- sig_tree_2016.Draw("bdt>>h_bdt_signal_SB_2016",str(lumi_2016/sig_scale_2016)+"*weight*"+Cut_SB) 
- sig_tree_2016.Draw("bdt>>h_bdt_signal_SR_2016",str(lumi_2016/sig_scale_2016)+"*weight*"+Cut_SR) 
+ sig_tree_2016.Draw("bdt>>h_bdt_signal_SB_2016",str(lumi_2016)+"*weight*"+Cut_SB) 
+ sig_tree_2016.Draw("bdt>>h_bdt_signal_SR_2016",str(lumi_2016)+"*weight*"+Cut_SR) 
 
  print "2016 Data/DataMix SB scale:",data_scale_2016/datamix_scale_2016
  
@@ -269,8 +273,8 @@ if __name__ == '__main__':
  sig_tree_2017.AddFile(inDir+'/signal_m_'+str(mass)+'_2017.root/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCP5_13TeV_pythia8_13TeV_H4GTag_0')
  sig_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2017 = float(histo_scale.Integral())
- sig_tree_2017.Draw("bdt>>h_bdt_signal_SB_2017",str(lumi_2017/sig_scale_2017)+"*weight*"+Cut_SB)  
- sig_tree_2017.Draw("bdt>>h_bdt_signal_SR_2017",str(lumi_2017/sig_scale_2017)+"*weight*"+Cut_SR) 
+ sig_tree_2017.Draw("bdt>>h_bdt_signal_SB_2017",str(lumi_2017)+"*weight*"+Cut_SB)  
+ sig_tree_2017.Draw("bdt>>h_bdt_signal_SR_2017",str(lumi_2017)+"*weight*"+Cut_SR) 
 
  print "2017 Data/DataMix SB scale:",data_scale_2017/datamix_scale_2017
 
@@ -300,8 +304,8 @@ if __name__ == '__main__':
  sig_tree_2018.AddFile(inDir+'/signal_m_'+str(mass)+'_2018.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
  sig_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2018 = float(histo_scale.Integral())
- sig_tree_2018.Draw("bdt>>h_bdt_signal_SB_2018",str(lumi_2018/sig_scale_2018)+"*weight*"+Cut_SB) 
- sig_tree_2018.Draw("bdt>>h_bdt_signal_SR_2018",str(lumi_2018/sig_scale_2018)+"*weight*"+Cut_SR) 
+ sig_tree_2018.Draw("bdt>>h_bdt_signal_SB_2018",str(lumi_2018)+"*weight*"+Cut_SB) 
+ sig_tree_2018.Draw("bdt>>h_bdt_signal_SR_2018",str(lumi_2018)+"*weight*"+Cut_SR) 
 
  print "2018 Data/DataMix SB scale:",data_scale_2018/datamix_scale_2018
 

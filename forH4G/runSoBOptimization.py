@@ -16,33 +16,41 @@ if __name__ == '__main__':
   ROOT.gROOT.SetBatch(ROOT.kTRUE)
 
   parser = OptionParser()
-  parser.add_option( "-v", "--var",    dest="var",    default="",   type="string", help="var" )
-  parser.add_option( "-s", "--sel",    dest="sel",    default="",   type="string", help="sel" )
-  parser.add_option( "-m", "--min",    dest="min",    default="0.", type="float", help="min" )
-  parser.add_option( "-M", "--max",    dest="max",    default="1.", type="float", help="max" )
-  parser.add_option( "-n", "--nsteps", dest="nsteps", default=1,    type="int",    help="nsteps" )
+  parser.add_option( "-v", "--var",      dest="var",      default="",    type="string", help="var" )
+  parser.add_option( "-s", "--sel",      dest="sel",      default="",    type="string", help="sel" )
+  parser.add_option( "-m", "--min",      dest="min",      default="-1.", type="float",  help="min" )
+  parser.add_option( "-M", "--max",      dest="max",      default="1.",  type="float",  help="max" )
+  parser.add_option( "-n", "--nsteps",   dest="nsteps",   default=1,     type="int",    help="nsteps" )
+  parser.add_option( "-g", "--genMass",  dest="genMass",  default=60,    type="int",    help="genMass" )
+  parser.add_option( "",   "--maximize", dest="maximize", default=1,     type="int",   help="maximize" )
   (options, args) = parser.parse_args()  
 
-  var    = options.var
-  sel    = options.sel
-  min    = options.min 
-  max    = options.max 
-  nsteps = options.nsteps 
+  var      = options.var
+  sel      = options.sel
+  min      = options.min 
+  max      = options.max 
+  nsteps   = options.nsteps 
+  mass     = options.genMass 
+  maximize = options.maximize
   
+  print "Mass     =",mass
   if sel=="":
-     print "Var    =",var
-     print "Min    =",min
-     print "Max    =",max
-     print "nSteps =",nsteps
+     print "Var      =",var
+     print "Min      =",min
+     print "Max      =",max
+     print "nSteps   =",nsteps
+     print "Maximize =",maximize
   else:
      print "Selection =",sel
 
-  mass = 25
   histo_scale = ROOT.TH1F("histo_scale","",100000,-1.1,1.)
 
-  Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. '
-  Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) '
-  Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) '
+  #Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. '
+  Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && pho1_MVA>-1. && pho2_MVA>0.75 && pho3_MVA>=-1. && pho4_MVA>=-1. '
+  #Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) '
+  Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>-1. && pho2_MVA>0.75 && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) '
+  #Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>=-1. && pho2_MVA>=-1. && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) '
+  Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1  && pho1_MVA>-1. && pho2_MVA>0.75 && pho3_MVA>=-1. && pho4_MVA>=-1. && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) '
 
   ### 2016 ###
   lumi_2016 = 35.9
@@ -56,7 +64,8 @@ if __name__ == '__main__':
   
   histo_scale.Reset() 
   datamix_tree_2016 = ROOT.TChain()
-  datamix_tree_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_mvaWeight.root/Data_13TeV_H4GTag_0')
+  #datamix_tree_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_mvaWeight.root/Data_13TeV_H4GTag_0')
+  datamix_tree_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_kinWeight.root/Data_13TeV_H4GTag_0')
   datamix_tree_2016 = reduceTree(datamix_tree_2016,Cut_noMass+')')
   datamix_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB+')')
   datamix_scale_2016 = float(histo_scale.Integral())
@@ -81,7 +90,8 @@ if __name__ == '__main__':
   
   histo_scale.Reset() 
   datamix_tree_2017 = ROOT.TChain()
-  datamix_tree_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_mvaWeight.root/Data_13TeV_H4GTag_0')
+  #datamix_tree_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_mvaWeight.root/Data_13TeV_H4GTag_0')
+  datamix_tree_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_kinWeight.root/Data_13TeV_H4GTag_0')
   datamix_tree_2017 = reduceTree(datamix_tree_2017,Cut_noMass+')')
   datamix_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB+')')
   datamix_scale_2017 = float(histo_scale.Integral())
@@ -106,7 +116,8 @@ if __name__ == '__main__':
   
   histo_scale.Reset() 
   datamix_tree_2018 = ROOT.TChain()
-  datamix_tree_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_mvaWeight.root/Data_13TeV_H4GTag_0')
+  #datamix_tree_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_mvaWeight.root/Data_13TeV_H4GTag_0')
+  datamix_tree_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_kinWeight.root/Data_13TeV_H4GTag_0') 
   datamix_tree_2018 = reduceTree(datamix_tree_2018,Cut_noMass+')')
   datamix_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB+')')
   datamix_scale_2018 = float(histo_scale.Integral())
@@ -135,11 +146,12 @@ if __name__ == '__main__':
   histo_SB_data_2018 = ROOT.TH1F("histo_SB_data_2018","histo_SB_data_2018",100000,-1,1)
  
   selection_photonID = " 1.>0. && "
-
+  
   selections = ""
   step = abs(min-max)/float(nsteps)
   for i in range(nsteps):
-     selections += " / "+str(var)+">"+str(min+i*step)
+     if maximize==1: selections += " / "+str(var)+">"+str(min+i*step)
+     else: selections += " / "+str(var)+"<"+str(max-i*step)
 
   if sel!="":
      selections = sel
@@ -222,6 +234,6 @@ if __name__ == '__main__':
         if score_data_mix>=0.: score_data_mix = math.sqrt((2*(s1+b1)*math.log(1+(s1/b1))) - 2*s1) 
         else: score_data_mix = -999.      
         
-     print "score_data_mix =",score_data_mix," - nEvents in datamix:",b1+b2," - nEvents in data sidebands:", b3
+     print "score_data_mix =",score_data_mix," - nEvents in datamix:",b2," - nEvents in data sidebands:", b3
 
      

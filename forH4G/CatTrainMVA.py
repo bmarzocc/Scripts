@@ -65,7 +65,7 @@ histo_scale_data.Reset()
 data_file_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2016 = float(histo_scale_data.Integral())
 datamix_file_2016 = ROOT.TChain()
-datamix_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix_2016_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_kinWeight.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2016_SB = float(histo_scale_datamix.Integral())
@@ -80,7 +80,7 @@ histo_scale_data.Reset()
 data_file_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2017 = float(histo_scale_data.Integral())
 datamix_file_2017 = ROOT.TChain()
-datamix_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/Data_NoPreselectionsApplied/Mixing/datamix_2017_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_kinWeight.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2017_SB = float(histo_scale_datamix.Integral())
@@ -95,7 +95,7 @@ histo_scale_data.Reset()
 data_file_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2018 = float(histo_scale_data.Integral())
 datamix_file_2018 = ROOT.TChain()
-datamix_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix_2018_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_kinWeight.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2018_SB = float(histo_scale_datamix.Integral())
@@ -108,13 +108,12 @@ ROOT.TMVA.Tools.Instance()
 factory = ROOT.TMVA.Factory("TMVAClassification", f_out,"AnalysisType=Classification")
 
 dataloader = ROOT.TMVA.DataLoader(outdir)
-#mvaVars = ['pho1_MVA', 'pho2_MVA', 'pho3_MVA', 'pho4_MVA']
-#mvaVars = ['a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'cosTheta_a2_dM', 'a1_dR_dM', 'a2_dR_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM/a1_mass_dM', 'a2_pt_dM/a2_mass_dM', 'pho1_pt/a2_mass_dM', 'pho2_pt/a2_mass_dM', 'pho3_pt/a2_mass_dM', 'pho4_pt/a2_mass_dM']
-#mvaVars = ['cosTheta_a1_dM', 'cosTheta_a2_dM', 'a1_dR_dM', 'a2_dR_dM', 'a1_a2_dR_dM', 'a1_mass_dM-a2_mass_dM', 'pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_pt_dM', 'a2_pt_dM', 'a1_pt_dM/a1_mass_dM', 'a2_pt_dM/a2_mass_dM', 'pho1_pt', 'pho2_pt', 'pho3_pt', 'pho4_pt']
-#mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA']
-#mvaVars = ['a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM/a1_mass_dM', 'a2_pt_dM/a2_mass_dM', 'pho1_pt/a2_mass_dM', 'pho2_pt/a2_mass_dM', 'pho3_pt/a2_mass_dM', 'pho4_pt/a2_mass_dM']
+
+#mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_a2_dR_dM', 'a1_pt_dM/a1_mass_dM', 'a2_pt_dM/a2_mass_dM', 'pho1_pt/a2_mass_dM', 'pho2_pt/a2_mass_dM', 'pho3_pt/a2_mass_dM', 'pho4_pt/a2_mass_dM']
 
 mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_a2_dR_dM', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
+
+#mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA']
 
 for x in mvaVars:
    #factory.AddVariable(x,"F")
@@ -122,11 +121,14 @@ for x in mvaVars:
 
 for i,mass in enumerate(sig_list):
    print "---> Signal normalization 2016: mass",mass,"-",float(sig_nums_2016[i])
-   dataloader.AddSignalTree(sig_file_2016[i],lumi_2016/float(sig_nums_2016[i]))
+   #dataloader.AddSignalTree(sig_file_2016[i],lumi_2016/float(sig_nums_2016[i]))
+   dataloader.AddSignalTree(sig_file_2016[i],lumi_2016) 
    print "---> Signal normalization 2017: mass",mass,"-",float(sig_nums_2017[i])
-   dataloader.AddSignalTree(sig_file_2017[i],lumi_2017/float(sig_nums_2017[i])) 
+   #dataloader.AddSignalTree(sig_file_2017[i],lumi_2017/float(sig_nums_2017[i])) 
+   dataloader.AddSignalTree(sig_file_2017[i],lumi_2017)   
    print "---> Signal normalization 2018: mass",mass,"-",float(sig_nums_2018[i])
-   dataloader.AddSignalTree(sig_file_2018[i],lumi_2018/float(sig_nums_2018[i]))
+   #dataloader.AddSignalTree(sig_file_2018[i],lumi_2018/float(sig_nums_2018[i]))
+   dataloader.AddSignalTree(sig_file_2018[i],lumi_2018) 
 
 scale_2016 = data_2016/datamix_2016_SB
 #scale_2016 = lumi_2016/datamix_2016

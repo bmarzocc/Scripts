@@ -89,20 +89,21 @@ if __name__ == '__main__':
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_preselSkim.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_preselSkim.root/Data_13TeV_H4GTag_0')  
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_preselSkim.root/Data_13TeV_H4GTag_0')  
- #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix.root/Data_13TeV_H4GTag_0') 
- #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
- #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix.root/Data_13TeV_H4GTag_0') 
- tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0') 
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0') 
  #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/Data_NoPreselectionsApplied/Mixing/datamix_skim.root/Data_13TeV_H4GTag_0')    
 
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix.root/Data_13TeV_H4GTag_0') 
+ #tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
+ tree_datamix.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix.root/Data_13TeV_H4GTag_0')  
+
  tree_data = ROOT.TChain() 
- tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_2016.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
+ #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_2016.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
  #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_2017.root/tagsDumper/trees/Data_13TeV_H4GTag_0') 
- #tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_2018.root/tagsDumper/trees/Data_13TeV_H4GTag_0')  
+ tree_data.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_2018.root/tagsDumper/trees/Data_13TeV_H4GTag_0')   
 
  #Cut = '1>0' 
  Cut = ' pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && fabs(pho1_eta) < 2.5 && fabs(pho2_eta) < 2.5 && fabs(pho3_eta) < 2.5 && fabs(pho4_eta) < 2.5 && (fabs(pho1_eta) < 1.4442 || fabs(pho1_eta) > 1.566) && (fabs(pho2_eta) < 1.4442 || fabs(pho2_eta) > 1.566) && (fabs(pho3_eta) < 1.4442 || fabs(pho3_eta) > 1.566) && (fabs(pho4_eta) < 1.4442 || fabs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) '

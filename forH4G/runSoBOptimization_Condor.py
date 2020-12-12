@@ -19,6 +19,8 @@ if __name__ == '__main__':
   parser.add_option(   "-m", "--mins",     dest="mins",     default="",   type="string", help="min values" )
   parser.add_option(   "-n", "--nSteps",   dest="nSteps",   default=1,    type="int",    help="nSteps" )
   parser.add_option(   "-b", "--nBunch",   dest="nBunch",   default=1,    type="int",    help="nBunch" ) 
+  parser.add_option(   "-g", "--genMass",  dest="genMass",  default=60,   type="int",    help="genMass" )
+  parser.add_option(   "",   "--maximize", dest="maximize", default="",   type="string", help="maximize" )
   (options, args) = parser.parse_args()  
 
   vars     = options.vars.split(',') 
@@ -26,24 +28,29 @@ if __name__ == '__main__':
   mins     = options.mins.split(',') 
   nSteps   = options.nSteps 
   nBunch   = options.nBunch 
+  mass     = options.genMass
+  maximize = options.maximize.split(',') 
   
+  print "Mass     =",mass
   print "vars     =",vars
   print "maxs     =",maxs
   print "mins     =",mins
+  print "Maximize =",maximize
   print "nSteps   =",nSteps
   print "nBunch   =",nBunch
   
   inputDir = os.getcwd()
-  if not os.path.isdir('error'): os.mkdir('error') 
-  if not os.path.isdir('output'): os.mkdir('output') 
-  if not os.path.isdir('log'): os.mkdir('log') 
+  if not os.path.isdir('error_m'+str(mass)): os.mkdir('error_m'+str(mass)) 
+  if not os.path.isdir('output_m'+str(mass)): os.mkdir('output_m'+str(mass)) 
+  if not os.path.isdir('log_m'+str(mass)): os.mkdir('log_m'+str(mass)) 
 
   selections_perVar = [] 
   for i in range(len(maxs)):  
      step = (float(maxs[i])-float(mins[i]))/float(nSteps) 
      selections = [] 
      for s in range(nSteps):
-        selections.append(vars[i]+">"+str(float(mins[i])+s*float(step)))
+        if maximize[i] == "1": selections.append(vars[i]+">"+str(float(mins[i])+s*float(step)))
+        else: selections.append(vars[i]+"<"+str(float(maxs[i])-s*float(step)))
      selections_perVar.append(selections)
   
   subset_len = len(list(itertools.combinations(range(nSteps), len(maxs))))
@@ -80,7 +87,10 @@ periodic_release        = (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentSt
 +AccountingGroup        = "group_u_CMS.CAF.ALCA"
 queue arguments from arguments.txt
 '''
-  
+  condor = condor.replace('output/strips','output_m'+str(mass)+'/strips')
+  condor = condor.replace('error/strips','error_m'+str(mass)+'/strips')
+  condor = condor.replace('log/strips','log_m'+str(mass)+'/strips') 
+
   with open("condor_job.txt", "w") as cnd_out:
      cnd_out.write(condor)
 
@@ -88,10 +98,11 @@ queue arguments from arguments.txt
 
   script = '''#!/bin/sh -e
 
-JOBID=$1;  
-INPUTDIR=$2;
-INPUTSTRING=$3;
-OUTPUTDIR=$4;
+JOBID=$1; 
+MASS=$2; 
+INPUTDIR=$3;
+INPUTSTRING=$4;
+OUTPUTDIR=$5;
 
 cd $INPUTDIR/
 
@@ -99,13 +110,13 @@ echo -e "evaluate"
 eval `scramv1 ru -sh`
 
 echo -e "Compute SoB";
-python runSoBOptimization.py -s \"${INPUTSTRING}\"
+python runSoBOptimization.py -g ${MASS}  -s \"${INPUTSTRING}\"
 
 echo -e "DONE";
 '''
   arguments=[]
   for iBunch in range(len(final_selection)):
-     arguments.append("\""+"{} {} {} {}".format(iBunch,inputDir,"\'"+final_selection[iBunch]+"\'",outputDir)+"\"")     
+     arguments.append("\""+"{} {} {} {} {}".format(iBunch,mass,inputDir,"\'"+final_selection[iBunch]+"\'",outputDir)+"\"")     
   with open("arguments.txt", "w") as args:
      args.write("\n".join(arguments)) 
   with open("run_script.sh", "w") as rs:
