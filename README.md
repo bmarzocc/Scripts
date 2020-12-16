@@ -25,6 +25,8 @@ Repository to keep track of useful scripts
 
     * cd forH4G/ 
     * python CatTrainMVA.py -m 60 -d dataset_m60 #train the BDT 
+    * python draw_TMVA_Plots.py -d dataset_m60/ #draw traning validation plots
     * ./runApplyCat.sh # in H4GTraining to evaluate the BDT
     * python smooth_BDT.py -d /eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/ -g 60 -n 190 -m -0.9 -M 1. # smooth the BDT distributions
     * python optimizeCategories.py -d /eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/ -c 5 -n 190 #optimize categories on the BDT distributions
+    * python optimizeCategories_Condor.py -d /eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/ -g 60 -n 190 #optimize categories on the BDT distributions on HTCondor

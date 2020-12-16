@@ -61,8 +61,20 @@ if __name__ == '__main__':
   significance_final = -999.
   partition_final = []
   
+  #1 categories
+  if nCats == 1:
+
+   for i in range(1,nBins+1):
+       partition = [[i,nBins]]
+       significance = sumSignificance(partition, h_bdt_signal_SR, h_bdt_datamix_SR_weighted_smooth, h_bdt_datamix_SB_weighted_smooth, h_bdt_data_SB_smooth)
+       if significance>significance_final:
+         significance_final = significance
+         partition_final = partition 
+   
+   print nCats," - Best category: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2,"1. --->",significance_final    
+
   #2 categories
-  if nCats == 2:
+  elif nCats == 2:
 
    for i in range(1,nBins+1):
     for j in range(i+1,nBins+1): 
@@ -74,7 +86,7 @@ if __name__ == '__main__':
          significance_final = significance
          partition_final = partition 
    
-   print "Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2,h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2,"1. --->",significance_final    
+   print nCats," - Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2,h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2,"1. --->",significance_final    
   
   #3 categories
   elif nCats == 3:
@@ -90,7 +102,7 @@ if __name__ == '__main__':
           significance_final = significance
           partition_final = partition   
    
-   print "Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, "1. --->",significance_final  
+   print nCats," - Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, "1. --->",significance_final  
    
   #4 categories
   elif nCats == 4:
@@ -107,7 +119,7 @@ if __name__ == '__main__':
            significance_final = significance
            partition_final = partition   
  
-   print "Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[3][0])-h_bdt_signal_SR.GetBinWidth(partition_final[3][0])/2, "1. --->",significance_final  
+   print nCats," - Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[3][0])-h_bdt_signal_SR.GetBinWidth(partition_final[3][0])/2, "1. --->",significance_final  
   
   #5 categories
   elif nCats == 5:
@@ -124,19 +136,35 @@ if __name__ == '__main__':
             significance_final = significance
             partition_final = partition 
 
-   print "Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[3][0])-h_bdt_signal_SR.GetBinWidth(partition_final[3][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[4][0])-h_bdt_signal_SR.GetBinWidth(partition_final[4][0])/2, "1. --->",significance_final     
+   print nCats," - Best categories: ",h_bdt_signal_SR.GetBinCenter(partition_final[0][0])-h_bdt_signal_SR.GetBinWidth(partition_final[0][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[1][0])-h_bdt_signal_SR.GetBinWidth(partition_final[1][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[2][0])-h_bdt_signal_SR.GetBinWidth(partition_final[2][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[3][0])-h_bdt_signal_SR.GetBinWidth(partition_final[3][0])/2, h_bdt_signal_SR.GetBinCenter(partition_final[4][0])-h_bdt_signal_SR.GetBinWidth(partition_final[4][0])/2, "1. --->",significance_final     
 
   else: 
-   print "Number of categories not supported, choose: 2, 3, 4 or 5!"
+   print "Number of categories not supported, choose: 1, 2, 3, 4 or 5!"
    sys.exit()
   
   #final details
+  outFileName = inDir+"/categorize_nBins_"+str(nBins)+"_nCat_"+str(nCats)+".txt"
+  outFile = open(outFileName,"w+") 
   print "Final details:"
   for pair in partition_final:
     s = h_bdt_signal_SR.Integral(pair[0],pair[1])   
     b = h_bdt_datamix_SR_weighted_smooth.Integral(pair[0],pair[1])
     m = h_bdt_datamix_SB_weighted_smooth.Integral(pair[0],pair[1])
     d = h_bdt_data_SB_smooth.Integral(pair[0],pair[1])
+    d_noSmooth = h_bdt_data_SB.Integral(pair[0],pair[1])
     significance = computeSignificance(s,b,m,d)
-    print h_bdt_signal_SR.GetBinCenter(pair[0])-h_bdt_signal_SR.GetBinWidth(pair[0])/2., h_bdt_signal_SR.GetBinCenter(pair[1])+h_bdt_signal_SR.GetBinWidth(pair[1])/2., " --> Significance:", significance, " - N Sig:", s, "N DataMix_SR:", b, "N DataMix_SB:", m, "N Data_SB:", d
+    print h_bdt_signal_SR.GetBinCenter(pair[0])-h_bdt_signal_SR.GetBinWidth(pair[0])/2., h_bdt_signal_SR.GetBinCenter(pair[1])+h_bdt_signal_SR.GetBinWidth(pair[1])/2., " --> Significance:", significance, " - N Sig:", s, "- N DataMix_SR:", b, "- N DataMix_SB:", m, "- N Data_SB:", d, "- N Data_SB (no smooth):", d_noSmooth
+    outFile.write(str(h_bdt_signal_SR.GetBinCenter(pair[0])-h_bdt_signal_SR.GetBinWidth(pair[0])/2.))
+    outFile.write("  ")
+    outFile.write(str(h_bdt_signal_SR.GetBinCenter(pair[1])+h_bdt_signal_SR.GetBinWidth(pair[1])/2.))
+    outFile.write("  Significance: %s"%(str(significance)) )
+    outFile.write(" NSig: %s"%(s))
+    outFile.write(" NDataMix_SR: %s"%(b))
+    outFile.write(" NDataMix_SB: %s"%(m))
+    outFile.write(" NData_SB: %s"%(d))
+    outFile.write(" NData_SB (no smooth): %s"%(d_noSmooth))
+    outFile.write("\n")
+  outFile.write("\n")
+  outFile.write("Tot_Significance: %s"%(significance_final))
+  outFile.close()
     
