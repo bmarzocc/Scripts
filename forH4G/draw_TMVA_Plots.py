@@ -37,11 +37,20 @@ def drawH2(h2,name):
    c.SaveAs(name+".png","png") 
    c.SaveAs(name+".pdf","pdf") 
 
+def convertToGraph(h1):
+  graph = TGraph()
+  for bin in range(1,h1.GetNbinsX()+1):
+    #print bin,h1.GetBinCenter(bin),Double(h1.GetBinContent(bin)) 
+    graph.SetPoint(bin-1,h1.GetBinCenter(bin),Double(h1.GetBinContent(bin))) 
+    
+  graph.SetPoint(h1.GetNbinsX(),1.,0.)    
+  return graph
 
 def drawROC(h1,name):
 
    gStyle.SetOptStat(0000)
 
+   h1 = convertToGraph(h1)
    h1.GetXaxis().SetTitle("signal efficiency")
    h1.GetYaxis().SetTitle("bkg rejection")
    h1.SetTitle("")
@@ -58,7 +67,7 @@ def drawROC(h1,name):
    latex.SetTextColor(kBlack)
    
    c = TCanvas()
-   h1.Draw("L")
+   h1.Draw("AL")
    latex.Draw("same")
    c.SaveAs(name+".png","png") 
    c.SaveAs(name+".pdf","pdf") 
@@ -66,6 +75,9 @@ def drawROC(h1,name):
 def drawROCs(h1,h2,name):
 
    gStyle.SetOptStat(0000)
+
+   h1 = convertToGraph(h1)
+   h2 = convertToGraph(h2)
 
    h1.GetXaxis().SetTitle("signal efficiency")
    h1.GetYaxis().SetTitle("bkg rejection")
@@ -90,7 +102,7 @@ def drawROCs(h1,h2,name):
    leg.AddEntry(h2,"Test","PL")
    
    c = TCanvas()
-   h1.Draw("L")
+   h1.Draw("AL")
    h2.Draw("L,same")
    leg.Draw("same") 
    c.SaveAs(name+".png","png") 
@@ -193,7 +205,7 @@ if __name__ == '__main__':
 
   parser = OptionParser()
   parser.add_option( "-d", "--dir",    dest="dir",    default="",   type="string", help="dir" )
-  parser.add_option( "-i", "--inDir",    dest="inDir",    default="Method_BDT",   type="string", help="inDir" )
+  parser.add_option( "-i", "--inDir",    dest="inDir",    default="Method_BDTG",   type="string", help="inDir" )
   (options, args) = parser.parse_args()  
 
   inDir = options.dir
@@ -226,11 +238,11 @@ if __name__ == '__main__':
   score_Bkg_Test = file.Get(Dir+"/MVA_"+Label+"_B") 
   drawScores(score_Sig_Training, score_Bkg_Training, score_Sig_Test, score_Bkg_Test, "BDT_Response")
 
-  #vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass']
-  #var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
+  vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass']
+  var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
 
-  vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass', 'a1_mass_dM', 'a2_mass_dM']
-  var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass', 'a1_mass (GeV)', 'a2_mass (GeV)']  
+  #vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass', 'a1_mass_dM', 'a2_mass_dM']
+  #var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass', 'a1_mass (GeV)', 'a2_mass (GeV)']  
   
   for iVar in range(0,len(vars)):  
      h_sig = file.Get(Dir+"/"+vars[iVar]+"__Signal")

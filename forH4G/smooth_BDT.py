@@ -4,17 +4,25 @@ import os
 import math
 from array import array
 
+def findMin(vec):
+  min = 999.
+  for i in vec:
+    if i<min: min=i
+  return min  
+
+def findMax(vec):
+  max = -999.
+  for i in vec:
+    if i>max: max=i
+  return max    
+
 def reduceTree(inTree, cut):
   small = inTree.CopyTree(str(cut))
   return small
 
 def makeRatio(h_num,h_denom):
-  bin_min = h_num.GetBinCenter(1)-h_num.GetBinWidth(1)/2.
-  bin_max = h_num.GetBinCenter(h_num.GetNbinsX())+h_num.GetBinWidth(h_num.GetNbinsX())/2.
-  h_ratio = ROOT.TH1F("h_bdt_ratio","h_bdt_ratio",h_num.GetNbinsX(),float(bin_min),float(bin_max))
-  for bin in range(1,h_num.GetNbinsX()+1):
-    if h_num.GetBinContent(bin)>0. and h_denom.GetBinContent(bin): h_ratio.SetBinContent(bin,float(h_num.GetBinContent(bin))/float(h_denom.GetBinContent(bin)))
-    else: h_ratio.SetBinContent(bin,1.) 
+  h_ratio = h_num.Clone()
+  h_ratio.Divide(h_denom) 
   return h_ratio
 
 def MakeTree(inputTree, h_ratio, scale, ouputFile):
@@ -69,13 +77,25 @@ def smoothing(h_bdt,method="SmoothSuper"):
  h_bdt_smooth_rnd.Scale(h_bdt.Integral()/h_bdt_smooth_rnd.Integral())
 
  for bin in range(0,h_bdt_smooth.GetNbinsX()): 
-  y = h_bdt_smooth.GetBinContent(bin+1)
-  h_bdt_smooth_up.SetBinContent(bin+1,y+math.sqrt(y))
-  if (y-math.sqrt(y))>0.: h_bdt_smooth_down.SetBinContent(bin+1,y-math.sqrt(y))
-  else: h_bdt_smooth_down.SetBinContent(bin+1,0.1)
+  y = h_bdt_smooth.GetBinContent(bin+1) 
+  if y>0.: 
+     h_bdt_smooth_up.SetBinContent(bin+1,y+math.sqrt(y))
+     if (y-math.sqrt(y))>0.: h_bdt_smooth_down.SetBinContent(bin+1,y-math.sqrt(y))
+     else: h_bdt_smooth_down.SetBinContent(bin+1,0.1)
+  else:
+     h_bdt_smooth_up.SetBinContent(bin+1,0.1)
+     h_bdt_smooth_down.SetBinContent(bin+1,0.1)
   h_diff.Fill(y-h_bdt.GetBinContent(bin+1)) 
 
  return [h_bdt_smooth,h_bdt_smooth_up,h_bdt_smooth_down,h_bdt_smooth_rnd,h_diff] 
+
+def isPositive(h):
+   isPos = True
+   for bin in range(1,h.GetNbinsX()+1):
+     if h.GetBinContent(bin)<=0.: 
+       isPos = False 
+       break
+   return isPos
 
 def compareHistos(hist_data_tmp,hist_datamix_tmp,name,rebin):
 
@@ -103,7 +123,7 @@ def compareHistos(hist_data_tmp,hist_datamix_tmp,name,rebin):
    hist_datamix.GetYaxis().SetRangeUser(min*0.8,max*2.)
 
    c = ROOT.TCanvas()
-   c.SetLogy()
+   if isPositive(hist_datamix) and isPositive(hist_data): c.SetLogy()
    hist_datamix.Draw("HIST") 
    hist_data.Draw("P,same")
    c.SaveAs(name+".png","png") 
@@ -115,11 +135,18 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
 
    ROOT.gStyle.SetOptStat(0000)
 
+   mins = [float(hist.GetMinimum()),float(hist_smooth.GetMinimum()),float(hist_smooth_up.GetMinimum()),float(hist_smooth_down.GetMinimum())]
+   maxs = [float(hist.GetMaximum()),float(hist_smooth.GetMaximum()),float(hist_smooth_up.GetMaximum()),float(hist_smooth_down.GetMaximum())]
+   
+   minimum = findMin(mins)
+   maximum = findMax(maxs)
    hist.SetLineColor(ROOT.kBlack)
    hist_smooth.SetLineColor(ROOT.kRed)
    hist_smooth_up.SetLineColor(ROOT.kGreen)
    hist_smooth_down.SetLineColor(ROOT.kBlue)
-   hist.GetYaxis().SetRangeUser(0.1,hist_smooth_up.GetMaximum()*2.)
+   if isPositive(hist) and isPositive(hist_smooth) and isPositive(hist_smooth_up) and isPositive(hist_smooth_down):
+      hist.GetYaxis().SetRangeUser(mimimum*0.1,2.*maximum)
+   else: hist.GetYaxis().SetRangeUser(minimum*0.001,2.*maximum)
    hist.GetXaxis().SetTitle('bdt')
    
    title = name
@@ -137,7 +164,7 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    leg.AddEntry(hist_smooth_down,"Smoothing - #sigma","L")
    
    c = ROOT.TCanvas()
-   c.SetLogy()
+   if isPositive(hist) and isPositive(hist_smooth) and isPositive(hist_smooth_up) and isPositive(hist_smooth_down): c.SetLogy()
    hist.Draw("HIST") 
    hist_smooth.Draw("HIST,same")
    hist_smooth_up.Draw("HIST,same")
@@ -172,10 +199,7 @@ if __name__ == '__main__':
  
  args = parser.parse_args()
  inDir = args.inDir
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied/dataset_PhoMVA_manyKinVars_fullRun2_datamix_v10_dataSBScaling_m60_17Nov2020_Final/'
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_19Nov2020/dataset_PhoMVA_old_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60_2Dec2020'
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_19Nov2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60_2Dec2020/'
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_19Nov2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_new_kinWeight_dataSBScaling_m60_2Dec2020/'
+ #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/'
 
  nBins = 190
  if args.nBins: nBins = args.nBins
@@ -195,8 +219,10 @@ if __name__ == '__main__':
 
  histo_scale = ROOT.TH1F("histo_scale","",100000,-1.1,1.)
  Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && bdt>-0.9)'
- Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9)'
- Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9)'
+ Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
+ #Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9 && abs(a1_mass_dM-'+str(mass)+')<0.15*'+str(mass)+' && abs(a2_mass_dM-'+str(mass)+')<0.15*'+str(mass)+')'
+ Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
+ #Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9 && abs(a1_mass_dM-'+str(mass)+')<0.15*'+str(mass)+' && abs(a2_mass_dM-'+str(mass)+')<0.15*'+str(mass)+')'
  
  h_bdt_signal_SB_2016 = ROOT.TH1F("h_bdt_signal_SB_2016","h_bdt_signal_SB_2016",int(nBins),float(min),float(max)) 
  h_bdt_signal_SB_2017 = ROOT.TH1F("h_bdt_signal_SB_2017","h_bdt_signal_SB_2017",int(nBins),float(min),float(max))
