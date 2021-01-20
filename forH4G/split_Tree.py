@@ -24,7 +24,9 @@ if __name__ == '__main__':
  outfile_even.cd() 
  print "Running on even events..."
  if dir!="":
-   for key in inFile.Get(dir).GetListOfKeys():
+   dir1 = inFile.Get("tagsDumper") 
+   dir2 = dir1.Get("trees") 
+   for key in dir2.GetListOfKeys():
     tree = inFile.Get(dir+"/"+key.GetName())
     outtree_even = tree.CloneTree(0)
     nentries = tree.GetEntries()
@@ -47,7 +49,9 @@ if __name__ == '__main__':
  outfile_odd.cd() 
  print "Running on odd events..."
  if dir!="":
-   for key in inFile.Get(dir).GetListOfKeys():
+   dir1 = inFile.Get("tagsDumper") 
+   dir2 = dir1.Get("trees") 
+   for key in dir2.GetListOfKeys(): 
     tree = inFile.Get(dir+"/"+key.GetName())
     outtree_odd = tree.CloneTree(0)
     nentries = tree.GetEntries()
