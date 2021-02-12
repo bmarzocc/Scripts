@@ -16,6 +16,20 @@ def findMax(vec):
     if i>max: max=i
   return max    
 
+def nonZeroMin(h):
+   min = 999.
+   for bin in range(1,h.GetNbinsX()+1):
+      if h.GetBinContent(bin)>0. and h.GetBinContent(bin)<min: min = h.GetBinContent(bin)
+   return min
+    
+def isPositive(h):
+   isPos = True
+   for bin in range(1,h.GetNbinsX()+1):
+     if h.GetBinContent(bin)<=0.: 
+       isPos = False 
+       break
+   return isPos
+
 def reduceTree(inTree, cut):
   small = inTree.CopyTree(str(cut))
   return small
@@ -78,24 +92,16 @@ def smoothing(h_bdt,method="SmoothSuper"):
 
  for bin in range(0,h_bdt_smooth.GetNbinsX()): 
   y = h_bdt_smooth.GetBinContent(bin+1) 
-  if y>0.: 
+  if y>=0.: 
      h_bdt_smooth_up.SetBinContent(bin+1,y+math.sqrt(y))
      if (y-math.sqrt(y))>0.: h_bdt_smooth_down.SetBinContent(bin+1,y-math.sqrt(y))
-     else: h_bdt_smooth_down.SetBinContent(bin+1,0.1)
+     else: h_bdt_smooth_down.SetBinContent(bin+1,0.)
   else:
-     h_bdt_smooth_up.SetBinContent(bin+1,0.1)
-     h_bdt_smooth_down.SetBinContent(bin+1,0.1)
+     h_bdt_smooth_up.SetBinContent(bin+1,0.)
+     h_bdt_smooth_down.SetBinContent(bin+1,0.)
   h_diff.Fill(y-h_bdt.GetBinContent(bin+1)) 
 
  return [h_bdt_smooth,h_bdt_smooth_up,h_bdt_smooth_down,h_bdt_smooth_rnd,h_diff] 
-
-def isPositive(h):
-   isPos = True
-   for bin in range(1,h.GetNbinsX()+1):
-     if h.GetBinContent(bin)<=0.: 
-       isPos = False 
-       break
-   return isPos
 
 def compareHistos(hist_data_tmp,hist_datamix_tmp,name,rebin):
 
@@ -116,14 +122,15 @@ def compareHistos(hist_data_tmp,hist_datamix_tmp,name,rebin):
 
    #hist_datamix.Scale(hist_data.Integral()/hist_datamix.Integral())
 
-   min = hist_datamix.GetMinimum()
-   if min>hist_data.GetMinimum(): min = hist_data.GetMinimum()
+   min = nonZeroMin(hist_datamix)
+   if min>nonZeroMin(hist_data): min = nonZeroMin(hist_data)
    max = hist_datamix.GetMaximum()
    if max<hist_data.GetMaximum(): max = hist_data.GetMaximum()
-   hist_datamix.GetYaxis().SetRangeUser(min*0.8,max*2.)
+   hist_datamix.GetYaxis().SetRangeUser(min*0.5,max*2.)
 
    c = ROOT.TCanvas()
-   if isPositive(hist_datamix) and isPositive(hist_data): c.SetLogy()
+   #if isPositive(hist_datamix) and isPositive(hist_data): c.SetLogy()
+   c.SetLogy()
    hist_datamix.Draw("HIST") 
    hist_data.Draw("P,same")
    c.SaveAs(name+".png","png") 
@@ -135,7 +142,7 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
 
    ROOT.gStyle.SetOptStat(0000)
 
-   mins = [float(hist.GetMinimum()),float(hist_smooth.GetMinimum()),float(hist_smooth_up.GetMinimum()),float(hist_smooth_down.GetMinimum())]
+   mins = [float(nonZeroMin(hist)),float(nonZeroMin(hist_smooth)),float(nonZeroMin(hist_smooth_up)),float(nonZeroMin(hist_smooth_down))]
    maxs = [float(hist.GetMaximum()),float(hist_smooth.GetMaximum()),float(hist_smooth_up.GetMaximum()),float(hist_smooth_down.GetMaximum())]
    
    minimum = findMin(mins)
@@ -144,9 +151,7 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    hist_smooth.SetLineColor(ROOT.kRed)
    hist_smooth_up.SetLineColor(ROOT.kGreen)
    hist_smooth_down.SetLineColor(ROOT.kBlue)
-   if isPositive(hist) and isPositive(hist_smooth) and isPositive(hist_smooth_up) and isPositive(hist_smooth_down):
-      hist.GetYaxis().SetRangeUser(mimimum*0.1,2.*maximum)
-   else: hist.GetYaxis().SetRangeUser(minimum*0.001,2.*maximum)
+   hist.GetYaxis().SetRangeUser(minimum*0.5,2.*maximum)
    hist.GetXaxis().SetTitle('bdt')
    
    title = name
@@ -164,7 +169,8 @@ def drawHistos(hist,hist_smooth,hist_smooth_up,hist_smooth_down,name):
    leg.AddEntry(hist_smooth_down,"Smoothing - #sigma","L")
    
    c = ROOT.TCanvas()
-   if isPositive(hist) and isPositive(hist_smooth) and isPositive(hist_smooth_up) and isPositive(hist_smooth_down): c.SetLogy()
+   #if isPositive(hist) and isPositive(hist_smooth) and isPositive(hist_smooth_up) and isPositive(hist_smooth_down): c.SetLogy()
+   c.SetLogy()
    hist.Draw("HIST") 
    hist_smooth.Draw("HIST,same")
    hist_smooth_up.Draw("HIST,same")
@@ -200,6 +206,8 @@ if __name__ == '__main__':
  args = parser.parse_args()
  inDir = args.inDir
  #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/'
+ #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Dec2020/dataset_PhoMVA_manyKinVars_aMass_fullRun2_datamix_old_kinWeight_dataSBScaling_MGPodd/15/'
+ #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Dec2020/dataset_PhoMVA_manyKinVars_aMass_fullRun2_DataMix_HighStat_kinWeight_dataSBScaling_MGPodd_bkgOdd/15/'
 
  nBins = 190
  if args.nBins: nBins = args.nBins
@@ -220,9 +228,7 @@ if __name__ == '__main__':
  histo_scale = ROOT.TH1F("histo_scale","",100000,-1.1,1.)
  Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && bdt>-0.9)'
  Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
- #Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9 && abs(a1_mass_dM-'+str(mass)+')<0.15*'+str(mass)+' && abs(a2_mass_dM-'+str(mass)+')<0.15*'+str(mass)+')'
  Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
- #Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9 && abs(a1_mass_dM-'+str(mass)+')<0.15*'+str(mass)+' && abs(a2_mass_dM-'+str(mass)+')<0.15*'+str(mass)+')'
  
  h_bdt_signal_SB_2016 = ROOT.TH1F("h_bdt_signal_SB_2016","h_bdt_signal_SB_2016",int(nBins),float(min),float(max)) 
  h_bdt_signal_SB_2017 = ROOT.TH1F("h_bdt_signal_SB_2017","h_bdt_signal_SB_2017",int(nBins),float(min),float(max))
@@ -246,7 +252,8 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  data_tree_2016 = ROOT.TChain()
- data_tree_2016.AddFile(inDir+'/data_'+str(mass)+'_2016.root/Data_13TeV_H4GTag_0')
+ #data_tree_2016.AddFile(inDir+'/data_'+str(mass)+'_2016.root/Data_13TeV_H4GTag_0')
+ data_tree_2016.AddFile(inDir+'/data_2016.root/Data_13TeV_H4GTag_0') 
  data_tree_2016 = reduceTree(data_tree_2016,Cut_noMass)
  data_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale",Cut_SB)
  data_scale_2016 = float(histo_scale.Integral())
@@ -256,7 +263,7 @@ if __name__ == '__main__':
  histo_scale.Reset() 
  datamix_tree_2016 = ROOT.TChain()
  #datamix_tree_2016.AddFile(inDir+'/data_mix_'+str(mass)+'_2016.root/Data_13TeV_H4GTag_0')
- datamix_tree_2016.AddFile(inDir+'/data_mix_2016_kinWeight.root/Data_13TeV_H4GTag_0')
+ datamix_tree_2016.AddFile(inDir+'/data_mix_2016_even.root/Data_13TeV_H4GTag_0')
  datamix_tree_2016 = reduceTree(datamix_tree_2016,Cut_noMass)
  datamix_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2016 = float(histo_scale.Integral())
@@ -264,7 +271,7 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  sig_tree_2016 = ROOT.TChain()
- sig_tree_2016.AddFile(inDir+'/signal_m_'+str(mass)+'_2016.root/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0')
+ sig_tree_2016.AddFile(inDir+'/signal_m_'+str(mass)+'_2016_even.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCUETP8M1_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
  sig_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2016 = float(histo_scale.Integral())
  sig_tree_2016.Draw("bdt>>h_bdt_signal_SB_2016",str(lumi_2016)+"*weight*"+Cut_SB) 
@@ -278,7 +285,8 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  data_tree_2017 = ROOT.TChain()
- data_tree_2017.AddFile(inDir+'/data_'+str(mass)+'_2017.root/Data_13TeV_H4GTag_0')
+ #data_tree_2017.AddFile(inDir+'/data_'+str(mass)+'_2017.root/Data_13TeV_H4GTag_0')
+ data_tree_2017.AddFile(inDir+'/data_2017.root/Data_13TeV_H4GTag_0') 
  data_tree_2017 = reduceTree(data_tree_2017,Cut_noMass)
  data_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale",Cut_SB)
  data_scale_2017 = float(histo_scale.Integral())
@@ -288,7 +296,7 @@ if __name__ == '__main__':
  histo_scale.Reset() 
  datamix_tree_2017 = ROOT.TChain()
  #datamix_tree_2017.AddFile(inDir+'/data_mix_'+str(mass)+'_2017.root/Data_13TeV_H4GTag_0')
- datamix_tree_2017.AddFile(inDir+'/data_mix_2017_kinWeight.root/Data_13TeV_H4GTag_0')
+ datamix_tree_2017.AddFile(inDir+'/data_mix_2017_even.root/Data_13TeV_H4GTag_0')
  datamix_tree_2017 = reduceTree(datamix_tree_2017,Cut_noMass)
  datamix_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2017 = float(histo_scale.Integral())
@@ -296,7 +304,7 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  sig_tree_2017 = ROOT.TChain()
- sig_tree_2017.AddFile(inDir+'/signal_m_'+str(mass)+'_2017.root/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCP5_13TeV_pythia8_13TeV_H4GTag_0')
+ sig_tree_2017.AddFile(inDir+'/signal_m_'+str(mass)+'_2017_even.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
  sig_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2017 = float(histo_scale.Integral())
  sig_tree_2017.Draw("bdt>>h_bdt_signal_SB_2017",str(lumi_2017)+"*weight*"+Cut_SB)  
@@ -309,7 +317,8 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  data_tree_2018 = ROOT.TChain()
- data_tree_2018.AddFile(inDir+'/data_'+str(mass)+'_2018.root/Data_13TeV_H4GTag_0')
+ #data_tree_2018.AddFile(inDir+'/data_'+str(mass)+'_2018.root/Data_13TeV_H4GTag_0')
+ data_tree_2018.AddFile(inDir+'/data_2018.root/Data_13TeV_H4GTag_0')  
  data_tree_2018 = reduceTree(data_tree_2018,Cut_noMass)
  data_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale",Cut_SB)
  data_scale_2018 = float(histo_scale.Integral())
@@ -319,7 +328,7 @@ if __name__ == '__main__':
  histo_scale.Reset() 
  datamix_tree_2018 = ROOT.TChain()
  #datamix_tree_2018.AddFile(inDir+'/data_mix_'+str(mass)+'_2018.root/Data_13TeV_H4GTag_0')
- datamix_tree_2018.AddFile(inDir+'/data_mix_2018_kinWeight.root/Data_13TeV_H4GTag_0')
+ datamix_tree_2018.AddFile(inDir+'/data_mix_2018_even.root/Data_13TeV_H4GTag_0')
  datamix_tree_2018 = reduceTree(datamix_tree_2018,Cut_noMass)
  datamix_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2018 = float(histo_scale.Integral())
@@ -327,7 +336,7 @@ if __name__ == '__main__':
 
  histo_scale.Reset() 
  sig_tree_2018 = ROOT.TChain()
- sig_tree_2018.AddFile(inDir+'/signal_m_'+str(mass)+'_2018.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
+ sig_tree_2018.AddFile(inDir+'/signal_m_'+str(mass)+'_2018_even.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0')
  sig_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SR)
  sig_scale_2018 = float(histo_scale.Integral())
  sig_tree_2018.Draw("bdt>>h_bdt_signal_SB_2018",str(lumi_2018)+"*weight*"+Cut_SB) 
@@ -367,7 +376,7 @@ if __name__ == '__main__':
 
  h_bdt_ratio_SB = makeRatio(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_diffBins)
 
- compareHistos(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_diffBins,"h_bdt_SB",1)
+ compareHistos(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_diffBins,"h_bdt_SB_m"+str(mass),1)
 
  h_bdt_datamix_SB_weighted_2016 = ROOT.TH1F("h_bdt_datamix_SB_weighted_2016","h_bdt_datamix_SB_weighted_2016",int(nBins),float(min),float(max))
  h_bdt_datamix_SB_weighted_2017 = ROOT.TH1F("h_bdt_datamix_SB_weighted_2017","h_bdt_datamix_SB_weighted_2017",int(nBins),float(min),float(max))
@@ -422,7 +431,7 @@ if __name__ == '__main__':
  h_bdt_datamix_SR_weighted.SetName('h_bdt_datamix_SR_weighted')
  h_bdt_datamix_SR_weighted.SetTitle('h_bdt_datamix_SR_weighted')
 
- compareHistos(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_weighted_diffBins,"h_bdt_SB_weighted",1)
+ compareHistos(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_weighted_diffBins,"h_bdt_SB_weighted_m"+str(mass),1)
 
  print "Smooth distributions..."
  algos = ['SmoothSuper']
@@ -432,29 +441,32 @@ if __name__ == '__main__':
    outFile.cd()
    hist_smooth = smoothing(h_bdt_datamix_SR_weighted,algo)
    if hist_smooth!=-1: 
-     drawHistos(h_bdt_datamix_SR_weighted,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo)
-     drawHisto(hist_smooth[4],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo+"_Diff") 
+     drawHistos(h_bdt_datamix_SR_weighted,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo+"_m"+str(mass))
+     drawHisto(hist_smooth[4],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo+"_Diff_m"+str(mass)) 
      h_bdt_datamix_SR_weighted.Write()
      hist_smooth[0].Write() 
      hist_smooth[1].Write() 
      hist_smooth[2].Write() 
    hist_smooth = smoothing(h_bdt_datamix_SB_weighted,algo)
    if hist_smooth!=-1: 
-     drawHistos(h_bdt_datamix_SB_weighted,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SB_weighted.GetName()+"_smoothing_"+algo)
-     drawHisto(hist_smooth[4],h_bdt_datamix_SB_weighted.GetName()+"_smoothing_"+algo+"_Diff") 
+     drawHistos(h_bdt_datamix_SB_weighted,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SB_weighted.GetName()+"_smoothing_"+algo+"_m"+str(mass))
+     drawHisto(hist_smooth[4],h_bdt_datamix_SB_weighted.GetName()+"_smoothing_"+algo+"_Diff_m"+str(mass)) 
      h_bdt_datamix_SB_weighted.Write()
      hist_smooth[0].Write() 
      hist_smooth[1].Write() 
      hist_smooth[2].Write()  
    hist_smooth = smoothing(h_bdt_data_SB,algo)
    if hist_smooth!=-1: 
-     drawHistos(h_bdt_data_SB,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_data_SB.GetName()+"_smoothing_"+algo)
-     drawHisto(hist_smooth[4],h_bdt_data_SB.GetName()+"_smoothing_"+algo+"_Diff") 
+     drawHistos(h_bdt_data_SB,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_data_SB.GetName()+"_smoothing_"+algo+"_m"+str(mass))
+     drawHisto(hist_smooth[4],h_bdt_data_SB.GetName()+"_smoothing_"+algo+"_Diff_m"+str(mass)) 
      h_bdt_data_SB.Write()
      hist_smooth[0].Write() 
      hist_smooth[1].Write() 
      hist_smooth[2].Write() 
    h_bdt_signal_SR.Write()
    h_bdt_signal_SB.Write()
+   h_bdt_data_SB_diffBins.Write()
+   h_bdt_datamix_SB_diffBins.Write()
+   h_bdt_datamix_SB_weighted_diffBins.Write()
    outFile.Close()
 
