@@ -13,14 +13,14 @@ def reduceTree(inTree, cut):
 
 def computeSignificance(s,b,m,d,d_noSmooth):
   significance = ((2*(s+b)*math.log(1+(s/b))) - 2*s) 
-  if significance>0. and m>=8. and d>=8. and d_noSmooth>=8. and b>0.: return math.sqrt(significance)
+  if significance>0. and d_noSmooth>=8. and b>0.: return math.sqrt(significance)
   #if significance>0. and b>0. and d_noSmooth>0.: return math.sqrt(significance)
   else: return -999.  
 
 def sumSignificance(partition, h_sig_SR, h_bkg_SR, h_bkg_SB, h_data_SB,h_data_SB_noSmooth):
   sum = 0.
   for pair in partition:
-    s = h_sig_SR.Integral(pair[0],pair[1])   
+    s = 2*h_sig_SR.Integral(pair[0],pair[1])   
     b = h_bkg_SR.Integral(pair[0],pair[1])
     m = h_bkg_SB.Integral(pair[0],pair[1])
     d = h_data_SB.Integral(pair[0],pair[1])
@@ -50,7 +50,7 @@ if __name__ == '__main__':
   print "nBins:",nBins
   print "nCats:",nCats
 
-  inFile = ROOT.TFile(inDir+"/BDT_Histos_smoothing_SmoothSuper_bins"+str(nBins)+"_a1_a1_massCut_15percent.root","READ")
+  inFile = ROOT.TFile(inDir+"/BDT_Histos_smoothing_SmoothSuper_bins"+str(nBins)+".root","READ")
 
   h_bdt_signal_SR = inFile.Get("h_bdt_signal_SR")
   h_bdt_datamix_SR_weighted = inFile.Get("h_bdt_datamix_SR_weighted")
@@ -69,6 +69,7 @@ if __name__ == '__main__':
    for i in range(1,nBins+1):
        partition = [[i,nBins]]
        significance = sumSignificance(partition, h_bdt_signal_SR, h_bdt_datamix_SR_weighted_smooth, h_bdt_datamix_SB_weighted_smooth, h_bdt_data_SB_smooth, h_bdt_data_SB)
+       #print h_bdt_signal_SR.GetBinCenter(partition[0][0])-h_bdt_signal_SR.GetBinWidth(partition[0][0])/2,"1. --->",significance,h_bdt_data_SB.Integral(partition[0][0],nBins)
        if significance>significance_final:
          significance_final = significance
          partition_final = partition 
@@ -145,11 +146,11 @@ if __name__ == '__main__':
    sys.exit()
   
   #final details
-  outFileName = inDir+"/categorize_nBins_"+str(nBins)+"_nCat_"+str(nCats)+".txt"
+  outFileName = inDir+"/categorize_nBins_"+str(nBins)+"_nCat_"+str(nCats)+"_v2.txt"
   outFile = open(outFileName,"w+") 
   print "Final details:"
   for pair in partition_final:
-    s = h_bdt_signal_SR.Integral(pair[0],pair[1])   
+    s = 2*h_bdt_signal_SR.Integral(pair[0],pair[1])   
     b = h_bdt_datamix_SR_weighted_smooth.Integral(pair[0],pair[1])
     m = h_bdt_datamix_SB_weighted_smooth.Integral(pair[0],pair[1])
     d = h_bdt_data_SB_smooth.Integral(pair[0],pair[1])
