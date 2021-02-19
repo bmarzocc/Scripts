@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 import numpy as n
 from ROOT import *
@@ -50,6 +49,12 @@ def drawROC(h1,name):
 
    gStyle.SetOptStat(0000)
 
+   latex = TLatex(0.35,0.45,"ROC = "+str(h1.Integral()*h1.GetBinWidth(1)))
+   latex.SetNDC()
+   latex.SetTextFont(42)
+   latex.SetTextSize(0.04)
+   latex.SetTextColor(kBlack)
+
    h1 = convertToGraph(h1)
    h1.GetXaxis().SetTitle("signal efficiency")
    h1.GetYaxis().SetTitle("bkg rejection")
@@ -59,12 +64,6 @@ def drawROC(h1,name):
 
    h1.SetLineColor(kBlack)
    h1.SetLineWidth(2) 
-
-   latex = TLatex(0.35,0.45,"ROC = "+str(h1.Integral()/100.))
-   latex.SetNDC()
-   latex.SetTextFont(42)
-   latex.SetTextSize(0.04)
-   latex.SetTextColor(kBlack)
    
    c = TCanvas()
    h1.Draw("AL")
@@ -90,7 +89,7 @@ def drawROCs(h1,h2,name):
    h2.SetLineColor(kRed+1)
    h2.SetLineWidth(2) 
 
-   leg = TLegend(0.2,0.83,0.8,0.88)
+   leg = TLegend(0.2,0.78,0.6,0.83)
    leg.SetFillColor(kWhite)
    leg.SetFillStyle(1000)
    leg.SetLineWidth(0)
@@ -204,8 +203,8 @@ if __name__ == '__main__':
   gROOT.SetBatch(kTRUE)
 
   parser = OptionParser()
-  parser.add_option( "-d", "--dir",    dest="dir",    default="",   type="string", help="dir" )
-  parser.add_option( "-i", "--inDir",    dest="inDir",    default="Method_BDTG",   type="string", help="inDir" )
+  parser.add_option( "-d", "--dir",   dest="dir",   default="",             type="string", help="dir")
+  parser.add_option( "-i", "--inDir", dest="inDir", default="Method_BDTG",  type="string", help="inDir")
   (options, args) = parser.parse_args()  
 
   inDir = options.dir
@@ -238,11 +237,17 @@ if __name__ == '__main__':
   score_Bkg_Test = file.Get(Dir+"/MVA_"+Label+"_B") 
   drawScores(score_Sig_Training, score_Bkg_Training, score_Sig_Test, score_Bkg_Test, "BDT_Response")
 
-  vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass']
-  var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
+  #vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass']
+  #var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
 
   #vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass', 'a1_mass_dM', 'a2_mass_dM']
   #var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass', 'a1_mass (GeV)', 'a2_mass (GeV)']  
+
+  #vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho1_MVA__M_1.__M_1.1:pho1_MVA', 'pho2_MVA__M_1.__M_1.1:pho2_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass', 'a1_mass_dM', 'a2_mass_dM']
+  #var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma1 MVA', '#gamma2 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass', 'a1_mass (GeV)', 'a2_mass (GeV)'] 
+
+  vars = ['a1_mass_dM_M_a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'pho3_MVA__M_1.__M_1.1:pho3_MVA', 'pho4_MVA__M_1.__M_1.1:pho4_MVA', 'a1_a2_dR_dM', 'a1_pt_dM_D_tp_mass', 'a2_pt_dM_D_tp_mass', 'a1_mass_dM', 'a2_mass_dM']
+  var_labels = ['a1_mass-a2_mass', 'cos#theta', 'Pt (GeV)', 'Pt (GeV)', '#gamma3 MVA', '#gamma4 MVA', 'dR(a1,a2)', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass', 'a1_mass (GeV)', 'a2_mass (GeV)']   
   
   for iVar in range(0,len(vars)):  
      h_sig = file.Get(Dir+"/"+vars[iVar]+"__Signal")
