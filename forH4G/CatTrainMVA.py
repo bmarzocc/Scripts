@@ -18,6 +18,8 @@ Cut_Background = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 
 
 Cut_Data = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && fabs(pho1_eta) < 2.5 && fabs(pho2_eta) < 2.5 && fabs(pho3_eta) < 2.5 && fabs(pho4_eta) < 2.5 && (fabs(pho1_eta) < 1.4442 || fabs(pho1_eta) > 1.566) && (fabs(pho2_eta) < 1.4442 || fabs(pho2_eta) > 1.566) && (fabs(pho3_eta) < 1.4442 || fabs(pho3_eta) > 1.566) && (fabs(pho4_eta) < 1.4442 || fabs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135))'
 
+#Tail cut: && a1_pt_dM<140. && a2_pt_dM<80. && fabs(a1_mass_dM-a2_mass_dM)<55. && a1_a2_dR_dM<6.2 && a1_pt_dM/tp_mass<0.8 && a2_pt_dM/tp_mass<0.8
+
 histo_scale_data = ROOT.TH1F("histo_scale_data","",100000,-1.1,1.)
 histo_scale_datamix = ROOT.TH1F("histo_scale_datamix","",100000,-1.1,1.)
 histo_scale_signal = ROOT.TH1F("histo_scale_signal","",100000,-1.1,1.)
@@ -35,7 +37,7 @@ sig_file_2018 = []
 for mass in sig_list:
 
    sig_file_2016_tmp = ROOT.TChain()
-   tree_name_2016 = '/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCUETP8M1_13TeV_pythia8_13TeV_H4GTag_0'
+   tree_name_2016 = '/eos/user/t/twamorka/H4G_Signal_Campaign_18Jan2021/2016/hadd/signal_m_'+str(mass)+'_odd.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCUETP8M1_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0'
    sig_file_2016_tmp.AddFile(tree_name_2016)
    histo_scale_signal.Reset() 
    sig_file_2016_tmp.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_signal","weight*"+Cut_Signal)
@@ -43,7 +45,7 @@ for mass in sig_list:
    sig_nums_2016.append(float(histo_scale_signal.Integral())) 
    
    sig_file_2017_tmp = ROOT.TChain()
-   tree_name_2017 = '/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/SUSYGluGluToHToAA_AToGG_M_'+str(mass)+'_TuneCP5_13TeV_pythia8_13TeV_H4GTag_0'
+   tree_name_2017 = '/eos/user/t/twamorka/H4G_Signal_Campaign_18Jan2021/2017/hadd/signal_m_'+str(mass)+'_odd.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0'
    sig_file_2017_tmp.AddFile(tree_name_2017)
    histo_scale_signal.Reset() 
    sig_file_2017_tmp.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_signal","weight*"+Cut_Signal) 
@@ -51,7 +53,7 @@ for mass in sig_list:
    sig_nums_2017.append(float(histo_scale_signal.Integral())) 
 
    sig_file_2018_tmp = ROOT.TChain()
-   tree_name_2018 = '/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/signal_m_'+str(mass)+'.root/tagsDumper/trees/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0'
+   tree_name_2018 = '/eos/user/t/twamorka/H4G_Signal_Campaign_18Jan2021/2018/hadd/signal_m_'+str(mass)+'_odd.root/HAHMHToAA_AToGG_MA_'+str(mass)+'GeV_TuneCP5_PSweights_13TeV_madgraph_pythia8_13TeV_H4GTag_0'
    sig_file_2018_tmp.AddFile(tree_name_2018)
    histo_scale_signal.Reset() 
    sig_file_2018_tmp.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_signal","weight*"+Cut_Signal)
@@ -65,7 +67,7 @@ histo_scale_data.Reset()
 data_file_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2016 = float(histo_scale_data.Integral())
 datamix_file_2016 = ROOT.TChain()
-datamix_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2016/hadd/data_mix_2016_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2016.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/DataMix_HighStat/hadd/data_mix_2016_kinWeight_odd.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2016_SB = float(histo_scale_datamix.Integral())
@@ -80,7 +82,7 @@ histo_scale_data.Reset()
 data_file_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2017 = float(histo_scale_data.Integral())
 datamix_file_2017 = ROOT.TChain()
-datamix_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2017/hadd/data_mix_2017_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2017.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/DataMix_HighStat/hadd/data_mix_2017_kinWeight_odd.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2017_SB = float(histo_scale_datamix.Integral())
@@ -95,13 +97,17 @@ histo_scale_data.Reset()
 data_file_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_data",Cut_Data)
 data_2018 = float(histo_scale_data.Integral())
 datamix_file_2018 = ROOT.TChain()
-datamix_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/2018/hadd/data_mix_2018_kinWeight.root/Data_13TeV_H4GTag_0')
+datamix_file_2018.AddFile('/eos/user/t/twamorka/h4g_fullRun2/withSystematics/DataMix_HighStat/hadd/data_mix_2018_kinWeight_odd.root/Data_13TeV_H4GTag_0')
 histo_scale_datamix.Reset() 
 datamix_file_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Data)
 datamix_2018_SB = float(histo_scale_datamix.Integral())
 histo_scale_datamix.Reset() 
 datamix_file_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale_datamix","weight*"+Cut_Background)
 datamix_2018 = float(histo_scale_datamix.Integral())
+
+print "datamix_2016_SB:",datamix_2016_SB
+print "datamix_2017_SB:",datamix_2017_SB
+print "datamix_2018_SB:",datamix_2018_SB
 
 f_out = ROOT.TFile(outdir+'/categorization_training.root','RECREATE')
 ROOT.TMVA.Tools.Instance()
@@ -111,7 +117,7 @@ dataloader = ROOT.TMVA.DataLoader(outdir)
 
 #mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_a2_dR_dM', 'a1_pt_dM/a1_mass_dM', 'a2_pt_dM/a2_mass_dM', 'pho1_pt/a2_mass_dM', 'pho2_pt/a2_mass_dM', 'pho3_pt/a2_mass_dM', 'pho4_pt/a2_mass_dM']
 
-mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_mass_dM-a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_a2_dR_dM', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
+mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA', 'a1_mass_dM-a2_mass_dM', 'a1_mass_dM', 'a2_mass_dM', 'cosTheta_a1_dM', 'a1_pt_dM', 'a2_pt_dM', 'a1_a2_dR_dM', 'a1_pt_dM/tp_mass', 'a2_pt_dM/tp_mass']
 
 #mvaVars = ['pho1_MVA<-1.? -1.1: pho1_MVA', 'pho2_MVA<-1.? -1.1: pho2_MVA', 'pho3_MVA<-1.? -1.1: pho3_MVA', 'pho4_MVA<-1.? -1.1: pho4_MVA']
 
