@@ -202,12 +202,13 @@ if __name__ == '__main__':
  parser.add_argument('-n', '--nBins', dest='nBins', required=False, type=int)
  parser.add_argument('-m', '--min', dest='min', required=False, type=float)
  parser.add_argument('-M', '--max', dest='max', required=False, type=float)
+ parser.add_argument('-r', '--massMin', dest='massMin', required=False, type=float)
+ parser.add_argument('-R', '--massMax', dest='massMax', required=False, type=float)
  
  args = parser.parse_args()
  inDir = args.inDir
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_9Dec2020/dataset_PhoMVA_manyKinVars_fullRun2_datamix_old_kinWeight_dataSBScaling_m60/'
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Dec2020/dataset_PhoMVA_manyKinVars_aMass_fullRun2_datamix_old_kinWeight_dataSBScaling_MGPodd/15/'
- #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Dec2020/dataset_PhoMVA_manyKinVars_aMass_fullRun2_DataMix_HighStat_kinWeight_dataSBScaling_MGPodd_bkgOdd/15/'
+ #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Jan2021/dataset_PhoMVA_manyKinVars_aMass_fullRun2_DataMix_HighStat_kinWeight_dataSBScaling_MGPodd_bkgOdd/'
+ #inDir = '/eos/user/t/twamorka/h4g_fullRun2/TrainingApplied_22Jan2021/19Feb2021/dataset_PhoMVA_manyKinVars_aMass_fullRun2_DataMix_HighStat_kinWeight_dataSBScaling_MGPodd_bkgOdd_newSignalWeights_parametrized_v2/'
 
  nBins = 190
  if args.nBins: nBins = args.nBins
@@ -216,18 +217,25 @@ if __name__ == '__main__':
  max = 1.
  if args.max: max = args.max
  
+ massMin = 115.
+ if args.massMin: massMin = args.massMin
+ massMax = 135.
+ if args.massMax: massMax = args.massMax
+
  mass = args.genMass
  #mass = 60
 
  print "inDir:",inDir
  print "nBins:",nBins
- print "Min:",min
- print "Max:",max
+ print "bdtMin:",min
+ print "bdtMax:",max
+ print "massMin:",massMin
+ print "massMax:",massMax
  print "Mass:",mass
 
  histo_scale = ROOT.TH1F("histo_scale","",100000,-1.1,1.)
  Cut_noMass = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && bdt>-0.9)'
- Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
+ Cut_SR = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && (tp_mass > '+str(massMin)+' && tp_mass < '+str(massMax)+') && bdt>-0.9 )'
  Cut_SB = '(pho1_pt > 30 && pho2_pt > 18 && pho3_pt > 15 && pho4_pt > 15 && abs(pho1_eta) < 2.5 && abs(pho2_eta) < 2.5 && abs(pho3_eta) < 2.5 && abs(pho4_eta) < 2.5 && (abs(pho1_eta) < 1.4442 || abs(pho1_eta) > 1.566) && (abs(pho2_eta) < 1.4442 || abs(pho2_eta) > 1.566) && (abs(pho3_eta) < 1.4442 || abs(pho3_eta) > 1.566) && (abs(pho4_eta) < 1.4442 || abs(pho4_eta) > 1.566) && pho1_electronveto==1 && pho2_electronveto==1 && pho3_electronveto==1 && pho4_electronveto==1 && tp_mass > 100 && tp_mass < 180 && !(tp_mass > 115 && tp_mass < 135) && bdt>-0.9 )'
  
  h_bdt_signal_SB_2016 = ROOT.TH1F("h_bdt_signal_SB_2016","h_bdt_signal_SB_2016",int(nBins),float(min),float(max)) 
@@ -239,6 +247,9 @@ if __name__ == '__main__':
  h_bdt_data_SB_2016 = ROOT.TH1F("h_bdt_data_SB_2016","h_bdt_data_SB_2016",int(nBins),float(min),float(max)) 
  h_bdt_data_SB_2017 = ROOT.TH1F("h_bdt_data_SB_2017","h_bdt_data_SB_2017",int(nBins),float(min),float(max))  
  h_bdt_data_SB_2018 = ROOT.TH1F("h_bdt_data_SB_2018","h_bdt_data_SB_2018",int(nBins),float(min),float(max))  
+ h_bdt_datamix_SR_2016 = ROOT.TH1F("h_bdt_datamix_SR_2016","h_bdt_datamix_SR_2016",int(nBins),float(min),float(max)) 
+ h_bdt_datamix_SR_2017 = ROOT.TH1F("h_bdt_datamix_SR_2017","h_bdt_datamix_SR_2017",int(nBins),float(min),float(max))  
+ h_bdt_datamix_SR_2018 = ROOT.TH1F("h_bdt_datamix_SR_2018","h_bdt_datamix_SR_2018",int(nBins),float(min),float(max))   
  
  h_bdt_data_SB_2016_diffBins = ROOT.TH1F("h_bdt_data_SB_2016_diffBins","h_bdt_data_SB_2016_diffBins",50,float(min),float(max)) 
  h_bdt_data_SB_2017_diffBins = ROOT.TH1F("h_bdt_data_SB_2017_diffBins","h_bdt_data_SB_2017_diffBins",50,float(min),float(max))  
@@ -268,6 +279,7 @@ if __name__ == '__main__':
  datamix_tree_2016.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2016 = float(histo_scale.Integral())
  datamix_tree_2016.Draw("bdt>>h_bdt_datamix_SB_2016_diffBins",str(data_scale_2016/datamix_scale_2016)+"*weight*"+Cut_SB)
+ datamix_tree_2016.Draw("bdt>>h_bdt_datamix_SR_2016",str(data_scale_2016/datamix_scale_2016)+"*weight*"+Cut_SR)
 
  histo_scale.Reset() 
  sig_tree_2016 = ROOT.TChain()
@@ -301,6 +313,7 @@ if __name__ == '__main__':
  datamix_tree_2017.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2017 = float(histo_scale.Integral())
  datamix_tree_2017.Draw("bdt>>h_bdt_datamix_SB_2017_diffBins",str(data_scale_2017/datamix_scale_2017)+"*weight*"+Cut_SB)
+ datamix_tree_2017.Draw("bdt>>h_bdt_datamix_SR_2017",str(data_scale_2017/datamix_scale_2017)+"*weight*"+Cut_SR)
 
  histo_scale.Reset() 
  sig_tree_2017 = ROOT.TChain()
@@ -333,6 +346,7 @@ if __name__ == '__main__':
  datamix_tree_2018.Draw("pho1_MVA<-1.?-1.1:pho1_MVA>>histo_scale","weight*"+Cut_SB)
  datamix_scale_2018 = float(histo_scale.Integral())
  datamix_tree_2018.Draw("bdt>>h_bdt_datamix_SB_2018_diffBins",str(data_scale_2018/datamix_scale_2018)+"*weight*"+Cut_SB)
+ datamix_tree_2018.Draw("bdt>>h_bdt_datamix_SR_2018",str(data_scale_2018/datamix_scale_2018)+"*weight*"+Cut_SR)
 
  histo_scale.Reset() 
  sig_tree_2018 = ROOT.TChain()
@@ -374,6 +388,13 @@ if __name__ == '__main__':
  h_bdt_datamix_SB_diffBins.SetName('h_bdt_datamix_SB_diffBins')
  h_bdt_datamix_SB_diffBins.SetTitle('h_bdt_datamix_SB_diffBins')
 
+ h_bdt_datamix_SR = h_bdt_datamix_SR_2016.Clone()
+ h_bdt_datamix_SR.Add(h_bdt_datamix_SR_2017)
+ h_bdt_datamix_SR.Add(h_bdt_datamix_SR_2018)
+ h_bdt_datamix_SR.SetName('h_bdt_datamix_SR')
+ h_bdt_datamix_SR.SetTitle('h_bdt_datamix_SR')
+
+ 
  h_bdt_ratio_SB = makeRatio(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_diffBins)
 
  compareHistos(h_bdt_data_SB_diffBins,h_bdt_datamix_SB_diffBins,"h_bdt_SB_m"+str(mass),1)
@@ -437,13 +458,21 @@ if __name__ == '__main__':
  algos = ['SmoothSuper']
 
  for algo in algos:
-   outFile = ROOT.TFile(inDir+'/BDT_Histos_smoothing_'+algo+'_bins'+str(nBins)+'.root',"RECREATE")
+   outFile = ROOT.TFile(inDir+'/BDT_Histos_smoothing_'+algo+'_bins'+str(nBins)+'_massMin'+str(massMin)+'_massMax'+str(massMax)+'.root',"RECREATE")
    outFile.cd()
    hist_smooth = smoothing(h_bdt_datamix_SR_weighted,algo)
    if hist_smooth!=-1: 
      drawHistos(h_bdt_datamix_SR_weighted,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo+"_m"+str(mass))
      drawHisto(hist_smooth[4],h_bdt_datamix_SR_weighted.GetName()+"_smoothing_"+algo+"_Diff_m"+str(mass)) 
      h_bdt_datamix_SR_weighted.Write()
+     hist_smooth[0].Write() 
+     hist_smooth[1].Write() 
+     hist_smooth[2].Write() 
+   hist_smooth = smoothing(h_bdt_datamix_SR,algo)
+   if hist_smooth!=-1: 
+     drawHistos(h_bdt_datamix_SR,hist_smooth[0],hist_smooth[1],hist_smooth[2],h_bdt_datamix_SR.GetName()+"_smoothing_"+algo+"_m"+str(mass))
+     drawHisto(hist_smooth[4],h_bdt_datamix_SR.GetName()+"_smoothing_"+algo+"_Diff_m"+str(mass)) 
+     h_bdt_datamix_SR.Write()
      hist_smooth[0].Write() 
      hist_smooth[1].Write() 
      hist_smooth[2].Write() 
